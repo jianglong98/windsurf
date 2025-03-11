@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Relaxation Massage Spa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1>Relaxation Spa</h1>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/booking">Book Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="booking-page">
+        <h1>Book Your Massage</h1>
+        
+        <form action="/booking" method="POST" class="booking-form">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="service">Select Service:</label>
+                <select id="service" name="service" required>
+                    <option value="">Choose a service...</option>
+                    <option value="swedish">Swedish Massage (60 min - $80)</option>
+                    <option value="deep-tissue">Deep Tissue Massage (60 min - $95)</option>
+                    <option value="hot-stone">Hot Stone Massage (75 min - $110)</option>
+                    <option value="sports">Sports Massage (60 min - $90)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Preferred Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="time">Preferred Time:</label>
+                <select id="time" name="time" required>
+                    <option value="">Select a time...</option>
+                    <option value="9:00">9:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:00">5:00 PM</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-button">Book Appointment</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Relaxation Spa. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Set minimum date to today
+        const dateInput = document.getElementById('date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+    </script>
+</body>
+</html>
