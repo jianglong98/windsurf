@@ -27,9 +27,13 @@ cd windsurf
 npm install
 ```
 
-4. Start the server:
+4. Start the server using either:
 ```bash
 npm start
+```
+or
+```bash
+node app.js
 ```
 
 5. Open your browser and visit: `http://localhost:3000`
