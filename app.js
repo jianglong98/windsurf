@@ -1,42 +1,60 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
+const flash = require('connect-flash');
+const { sequelize } = require('./models');
+const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// View engine setup
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// In-memory storage for bookings (replace with database in production)
-let bookings = [];
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Session and Flash setup
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+app.use(flash());
+
+// Make flash messages available to all views
+app.use((req, res, next) => {
+    res.locals.messages = {
+        error: req.flash('error'),
+        success: req.flash('success')
+    };
+    next();
+});
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('index');
+app.use('/', require('./routes/index'));
+app.use('/admin', require('./routes/admin'));
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error', { error: 'Something went wrong!' });
 });
 
-app.get('/services', (req, res) => {
-    res.render('services');
-});
+const PORT = process.env.PORT || 3000;
 
-app.get('/booking', (req, res) => {
-    res.render('booking');
-});
-
-app.post('/booking', (req, res) => {
-    const { name, email, date, time, service } = req.body;
-    bookings.push({ name, email, date, time, service });
-    res.redirect('/confirmation');
-});
-
-app.get('/confirmation', (req, res) => {
-    res.render('confirmation');
-});
-
-// Start server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+// Sync database and start server
+sequelize.sync()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running at http://localhost:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('Failed to sync database:', err);
+    });

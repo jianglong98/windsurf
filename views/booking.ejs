@@ -1,81 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment - Relaxation Massage Spa</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <nav>
-        <div class="nav-container">
-            <h1>Relaxation Spa</h1>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/services">Services</a></li>
-                <li><a href="/booking">Book Now</a></li>
-            </ul>
+<%- include('partials/header') %>
+
+<main class="booking-page">
+    <h1>Book Your Massage</h1>
+    
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= messages.error %>
         </div>
-    </nav>
+    <% } %>
+    
+    <form action="/booking" method="POST" class="booking-form">
+        <div class="form-group">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
 
-    <main class="booking-page">
-        <h1>Book Your Massage</h1>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="serviceId">Select Service:</label>
+            <select id="serviceId" name="serviceId" required>
+                <option value="">Choose a service...</option>
+                <% services.forEach(function(service) { %>
+                    <option value="<%= service.id %>">
+                        <%= service.name %> (<%= service.duration %> min - $<%= service.price %>)
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Preferred Date:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">Preferred Time:</label>
+            <select id="time" name="time" required>
+                <option value="">Select a time...</option>
+                <!-- Time slots will be populated by JavaScript based on business hours -->
+            </select>
+        </div>
+
+        <button type="submit" class="submit-button">Book Appointment</button>
+    </form>
+</main>
+
+<script>
+// Set minimum date to today
+const dateInput = document.getElementById('date');
+const today = new Date().toISOString().split('T')[0];
+dateInput.min = today;
+
+// Handle date change to fetch available time slots
+dateInput.addEventListener('change', async function() {
+    const date = this.value;
+    const timeSelect = document.getElementById('time');
+    timeSelect.innerHTML = '<option value="">Loading available times...</option>';
+    
+    try {
+        const response = await fetch(`/availability?date=${date}`);
+        const data = await response.json();
         
-        <form action="/booking" method="POST" class="booking-form">
-            <div class="form-group">
-                <label for="name">Full Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
+        if (data.available) {
+            const { open, close } = data.hours;
+            const slots = generateTimeSlots(open, close);
+            timeSelect.innerHTML = '<option value="">Select a time...</option>' + slots;
+        } else {
+            timeSelect.innerHTML = '<option value="">No available times</option>';
+        }
+    } catch (error) {
+        timeSelect.innerHTML = '<option value="">Error loading times</option>';
+    }
+});
 
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
+function generateTimeSlots(openTime, closeTime) {
+    const slots = [];
+    const [openHour, openMinute] = openTime.split(':').map(Number);
+    const [closeHour, closeMinute] = closeTime.split(':').map(Number);
+    
+    let currentHour = openHour;
+    let currentMinute = openMinute;
+    
+    while (currentHour < closeHour || (currentHour === closeHour && currentMinute < closeMinute)) {
+        const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+        slots.push(`<option value="${timeString}">${formatTime(timeString)}</option>`);
+        
+        // Increment by 1 hour
+        currentHour++;
+        if (currentHour === 24) currentHour = 0;
+    }
+    
+    return slots.join('');
+}
 
-            <div class="form-group">
-                <label for="service">Select Service:</label>
-                <select id="service" name="service" required>
-                    <option value="">Choose a service...</option>
-                    <option value="swedish">Swedish Massage (60 min - $80)</option>
-                    <option value="deep-tissue">Deep Tissue Massage (60 min - $95)</option>
-                    <option value="hot-stone">Hot Stone Massage (75 min - $110)</option>
-                    <option value="sports">Sports Massage (60 min - $90)</option>
-                </select>
-            </div>
+function formatTime(time24) {
+    const [hour, minute] = time24.split(':');
+    const hour12 = hour % 12 || 12;
+    const ampm = hour < 12 ? 'AM' : 'PM';
+    return `${hour12}:${minute} ${ampm}`;
+}
+</script>
 
-            <div class="form-group">
-                <label for="date">Preferred Date:</label>
-                <input type="date" id="date" name="date" required>
-            </div>
-
-            <div class="form-group">
-                <label for="time">Preferred Time:</label>
-                <select id="time" name="time" required>
-                    <option value="">Select a time...</option>
-                    <option value="9:00">9:00 AM</option>
-                    <option value="10:00">10:00 AM</option>
-                    <option value="11:00">11:00 AM</option>
-                    <option value="13:00">1:00 PM</option>
-                    <option value="14:00">2:00 PM</option>
-                    <option value="15:00">3:00 PM</option>
-                    <option value="16:00">4:00 PM</option>
-                    <option value="17:00">5:00 PM</option>
-                </select>
-            </div>
-
-            <button type="submit" class="submit-button">Book Appointment</button>
-        </form>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Relaxation Spa. All rights reserved.</p>
-    </footer>
-
-    <script>
-        // Set minimum date to today
-        const dateInput = document.getElementById('date');
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.min = today;
-    </script>
-</body>
-</html>
+<%- include('partials/footer') %>

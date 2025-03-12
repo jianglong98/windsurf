@@ -1,52 +1,47 @@
-# Massage Booking Website
+# Massage Booking System
 
-A Node.js-based web application for booking massage appointments.
+A web application for managing massage bookings with an admin dashboard.
 
 ## Features
-- View available massage services
-- Book appointments online
-- Simple and intuitive interface
-- Responsive design for all devices
 
-## Prerequisites
-- Node.js (v14 or higher)
-- npm (Node Package Manager)
+- Book massage appointments
+- View available services
+- Admin dashboard for booking management
+- SQLite database for easy deployment
+- Session-based authentication for admin access
 
-## Installation
+## Tech Stack
 
-1. Install Node.js and npm from [https://nodejs.org/](https://nodejs.org/)
+- Node.js/Express backend
+- EJS templating engine
+- SQLite database with Sequelize ORM
+- Bootstrap 5 for UI
 
-2. Clone the repository:
-```bash
-git clone https://github.com/jianglong98/windsurf.git
-cd windsurf
-```
+## Setup
 
-3. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-4. Start the server using either:
+2. Start the server:
 ```bash
 npm start
 ```
-or
-```bash
-node app.js
-```
 
-5. Open your browser and visit: `http://localhost:3000`
+The application will be available at http://localhost:3000
 
-## Available Services
-- Swedish Massage (60 min)
-- Deep Tissue Massage (60 min)
-- Hot Stone Massage (75 min)
-- Sports Massage (60 min)
+## Admin Access
 
-## Technologies Used
-- Node.js
-- Express.js
-- EJS Templates
-- CSS3
-- JavaScript
+Access the admin dashboard at http://localhost:3000/admin/login
+Default password: admin123 (change this in production)
+
+## Project Structure
+
+- `app.js` - Main application entry point
+- `config/` - Database configuration
+- `models/` - Sequelize models
+- `routes/` - Express routes
+- `views/` - EJS templates
+- `public/` - Static assets
+- `database.sqlite` - SQLite database file

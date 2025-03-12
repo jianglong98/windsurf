@@ -21,34 +21,21 @@
     <main class="services-page">
         <h1>Our Massage Services</h1>
         
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        
         <div class="services-grid">
-            <div class="service-card">
-                <h2>Swedish Massage</h2>
-                <p class="price">$80 / 60 minutes</p>
-                <p>Classic relaxation massage using long, flowing strokes to reduce tension and promote wellness.</p>
-                <a href="/booking" class="book-button">Book Now</a>
-            </div>
-
-            <div class="service-card">
-                <h2>Deep Tissue Massage</h2>
-                <p class="price">$95 / 60 minutes</p>
-                <p>Therapeutic massage targeting deep muscle layers to relieve chronic tension and pain.</p>
-                <a href="/booking" class="book-button">Book Now</a>
-            </div>
-
-            <div class="service-card">
-                <h2>Hot Stone Massage</h2>
-                <p class="price">$110 / 75 minutes</p>
-                <p>Relaxing massage using heated stones to melt away tension and promote deep relaxation.</p>
-                <a href="/booking" class="book-button">Book Now</a>
-            </div>
-
-            <div class="service-card">
-                <h2>Sports Massage</h2>
-                <p class="price">$90 / 60 minutes</p>
-                <p>Targeted massage for athletes and active individuals to enhance performance and recovery.</p>
-                <a href="/booking" class="book-button">Book Now</a>
-            </div>
+            <% services.forEach(function(service) { %>
+                <div class="service-card">
+                    <h2><%= service.name %></h2>
+                    <p class="price">$<%= service.price %> / <%= service.duration %> minutes</p>
+                    <p><%= service.description %></p>
+                    <a href="/booking" class="book-button">Book Now</a>
+                </div>
+            <% }); %>
         </div>
     </main>
 
