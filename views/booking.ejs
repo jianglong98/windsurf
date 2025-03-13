@@ -1,0 +1,108 @@
+<%- include('partials/header') %>
+
+<main class="booking-page">
+    <h1>Book Your Massage</h1>
+    
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= messages.error %>
+        </div>
+    <% } %>
+    
+    <form action="/booking" method="POST" class="booking-form">
+        <div class="form-group">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="serviceId">Select Service:</label>
+            <select id="serviceId" name="serviceId" required>
+                <option value="">Choose a service...</option>
+                <% services.forEach(function(service) { %>
+                    <option value="<%= service.id %>">
+                        <%= service.name %> (<%= service.duration %> min - $<%= service.price %>)
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Preferred Date:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">Preferred Time:</label>
+            <select id="time" name="time" required>
+                <option value="">Select a time...</option>
+                <!-- Time slots will be populated by JavaScript based on business hours -->
+            </select>
+        </div>
+
+        <button type="submit" class="submit-button">Book Appointment</button>
+    </form>
+</main>
+
+<script>
+// Set minimum date to today
+const dateInput = document.getElementById('date');
+const today = new Date().toISOString().split('T')[0];
+dateInput.min = today;
+
+// Handle date change to fetch available time slots
+dateInput.addEventListener('change', async function() {
+    const date = this.value;
+    const timeSelect = document.getElementById('time');
+    timeSelect.innerHTML = '<option value="">Loading available times...</option>';
+    
+    try {
+        const response = await fetch(`/availability?date=${date}`);
+        const data = await response.json();
+        
+        if (data.available) {
+            const { open, close } = data.hours;
+            const slots = generateTimeSlots(open, close);
+            timeSelect.innerHTML = '<option value="">Select a time...</option>' + slots;
+        } else {
+            timeSelect.innerHTML = '<option value="">No available times</option>';
+        }
+    } catch (error) {
+        timeSelect.innerHTML = '<option value="">Error loading times</option>';
+    }
+});
+
+function generateTimeSlots(openTime, closeTime) {
+    const slots = [];
+    const [openHour, openMinute] = openTime.split(':').map(Number);
+    const [closeHour, closeMinute] = closeTime.split(':').map(Number);
+    
+    let currentHour = openHour;
+    let currentMinute = openMinute;
+    
+    while (currentHour < closeHour || (currentHour === closeHour && currentMinute < closeMinute)) {
+        const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+        slots.push(`<option value="${timeString}">${formatTime(timeString)}</option>`);
+        
+        // Increment by 1 hour
+        currentHour++;
+        if (currentHour === 24) currentHour = 0;
+    }
+    
+    return slots.join('');
+}
+
+function formatTime(time24) {
+    const [hour, minute] = time24.split(':');
+    const hour12 = hour % 12 || 12;
+    const ampm = hour < 12 ? 'AM' : 'PM';
+    return `${hour12}:${minute} ${ampm}`;
+}
+</script>
+
+<%- include('partials/footer') %>
