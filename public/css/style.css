@@ -34,6 +34,17 @@ a {
   font-size: 1.5rem;
 }
 
+.nav-link {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link.active {
+  color: #fff !important;
+  font-weight: 700;
+  border-bottom: 2px solid #fff;
+}
+
 /* Cards */
 .card {
   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
@@ -59,6 +70,15 @@ a {
   color: var(--dark-color);
 }
 
+.booking-form .form-label {
+  font-weight: 500;
+}
+
+.booking-form .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
 /* Buttons */
 .btn-primary {
   background-color: var(--primary-color);
@@ -78,6 +98,22 @@ a {
 .btn-outline-primary:hover {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
+}
+
+.btn-book-now {
+  background-color: #28a745;
+  border-color: #28a745;
+  font-weight: 700;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+}
+
+.btn-book-now:hover {
+  background-color: #218838;
+  border-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Footer */
@@ -102,6 +138,27 @@ footer a:hover {
   padding: 4rem 2rem;
   margin-bottom: 2rem;
   border-radius: 0.3rem;
+}
+
+.hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/img/massage-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 100px 0;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 /* Booking Page */
@@ -141,6 +198,33 @@ footer a:hover {
   border-left-color: var(--danger-color);
 }
 
+.admin-card {
+  border-left: 4px solid #007bff;
+  margin-bottom: 1.5rem;
+}
+
+.admin-card .card-title {
+  font-weight: 700;
+  color: #007bff;
+}
+
+.admin-card .card-text {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.booking-status-pending {
+  color: #ffc107;
+}
+
+.booking-status-confirmed {
+  color: #28a745;
+}
+
+.booking-status-cancelled {
+  color: #dc3545;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .jumbotron {
@@ -149,6 +233,18 @@ footer a:hover {
   
   .card-body {
     padding: 1rem;
+  }
+  
+  .hero {
+    padding: 60px 0;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
   }
 }
 
@@ -188,4 +284,117 @@ footer a:hover {
 
 .bi-arrow-right::before {
   content: "→";
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Custom Form Elements */
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: #007bff;
+  background-color: #007bff;
+}
+
+/* Alert Styles */
+.alert {
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Business Hours Table */
+.business-hours-table .closed {
+  color: #dc3545;
+  font-style: italic;
+}
+
+/* About Page */
+.team-member {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.team-member img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 5px solid #f8f9fa;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.team-member h5 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.team-member .position {
+  color: #6c757d;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+/* Contact Page */
+.contact-info {
+  margin-bottom: 2rem;
+}
+
+.contact-info i {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-right: 1rem;
+}
+
+.map-container {
+  height: 300px;
+  margin-bottom: 2rem;
+}
+
+/* Testimonials */
+.testimonial {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.testimonial::before {
+  content: '"';
+  font-size: 5rem;
+  color: rgba(0, 123, 255, 0.1);
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-family: serif;
+}
+
+.testimonial .client-name {
+  font-weight: 700;
+  color: #007bff;
+}
+
+/* Utility Classes */
+.text-highlight {
+  color: #007bff;
+  font-weight: 700;
+}
+
+.bg-light-blue {
+  background-color: #e9f7ff;
+}
+
+.rounded-custom {
+  border-radius: 1rem;
+}
+
+.shadow-custom {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }

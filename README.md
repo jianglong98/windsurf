@@ -86,6 +86,40 @@ After seeding the database, you can use these accounts:
   - Email: john@example.com
   - Password: password123
 
+## Admin Login
+
+The admin login functionality provides secure access to the admin dashboard. To access the admin area:
+
+1. Navigate to `/admin/login` or click on the "Admin Login" link in the navigation bar
+2. Enter the admin credentials (email: admin@example.com, password: admin123)
+3. Upon successful login, you'll be redirected to the admin dashboard
+
+The admin dashboard provides access to:
+- Today's bookings and pending bookings overview
+- Services management (add, edit, view services)
+- Business hours management
+- All bookings with filtering options
+
+## Testing
+
+The project includes automated tests for the admin functionality:
+
+1. Install Puppeteer (if not already installed):
+   ```bash
+   npm install puppeteer
+   ```
+
+2. Run the admin login test:
+   ```bash
+   node test-admin-login.js
+   ```
+
+This test verifies:
+- Admin login functionality
+- Access to the admin dashboard
+- Navigation to services and business hours pages
+- Logout functionality
+
 ## Project Structure
 
 ```
@@ -99,76 +133,57 @@ massage-booking/
 │   └── businessHours.js   # Business hours model
 ├── routes/                # Route handlers
 │   ├── index.js           # Main routes
-│   ├── booking.js         # Booking routes
-│   └── admin.js           # Admin routes
+│   ├── admin.js           # Admin routes
+│   ├── bookings.js        # Booking routes
+│   └── services.js        # Service routes
 ├── views/                 # EJS templates
 │   ├── partials/          # Reusable template parts
 │   ├── admin/             # Admin views
-│   └── booking/           # Booking views
+│   ├── bookings/          # Booking views
+│   └── services/          # Service views
 ├── public/                # Static assets
 │   ├── css/               # Stylesheets
 │   ├── js/                # Client-side JavaScript
 │   └── img/               # Images
-├── seeders/               # Database seeders
-├── tests/                 # Test files
-│   ├── models/            # Model tests
-│   ├── routes/            # Route tests
-│   └── e2e/               # End-to-end tests
-└── .env                   # Environment variables
-```
-
-## Automated Testing
-
-The project includes automated tests to ensure functionality across all pages:
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with watch mode
-npm run test:watch
-
-# Run tests with coverage report
-npm run test:coverage
-
-# Run specific test suite
-npm test -- tests/booking.test.js
-```
-
-## Development
-
-To run the application in development mode with automatic restart:
-
-```bash
-npm run dev
+├── middleware/            # Custom middleware
+├── utils/                 # Utility functions
+├── test/                  # Test files
+├── seed.js                # Database seeder
+├── test-admin-login.js    # Admin login test script
+├── .env                   # Environment variables
+└── package.json           # Project dependencies
 ```
 
 ## API Endpoints
 
 ### Public Endpoints
 - `GET /` - Home page
-- `GET /services` - View all services
+- `GET /services` - List all active services
+- `GET /booking` - Booking form
+- `POST /booking` - Create a new booking
 - `GET /about` - About page
 - `GET /contact` - Contact page
-- `GET /booking` - Booking form
-- `POST /booking` - Submit booking
+- `POST /contact` - Submit contact form
 
 ### Admin Endpoints
 - `GET /admin/login` - Admin login page
 - `POST /admin/login` - Admin login authentication
 - `GET /admin/dashboard` - Admin dashboard
+- `GET /admin/bookings` - All bookings
 - `GET /admin/services` - Manage services
 - `POST /admin/services` - Add new service
-- `POST /admin/services/:id` - Update service
-- `GET /admin/bookings` - View all bookings
-- `POST /admin/bookings/:id/status` - Update booking status
-- `GET /admin/business-hours` - Manage business hours
+- `GET /admin/business-hours` - Business hours management
 - `POST /admin/business-hours/:id` - Update business hours
+- `GET /admin/logout` - Admin logout
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Future Enhancements
 
-- User registration and login system
 - Email notifications for booking confirmations
+- SMS reminders for upcoming appointments
 - Online payment integration
 - Calendar view for bookings
 - Staff management with individual schedules
@@ -182,6 +197,6 @@ npm run dev
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## Contact
 
-This project is licensed under the MIT License.
+Project Link: [https://github.com/jianglong98/windsurf](https://github.com/jianglong98/windsurf)

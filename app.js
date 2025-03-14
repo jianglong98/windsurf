@@ -32,12 +32,25 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Flash messages middleware
+// Global middleware for template variables
 app.use((req, res, next) => {
+  // Make user info available to all templates
+  res.locals.user = req.session.user || null;
+  
+  // Flash messages middleware
   res.locals.success_msg = req.session.success_msg;
   res.locals.error_msg = req.session.error_msg;
+  
+  // Clear flash messages after they've been sent to the template
   delete req.session.success_msg;
   delete req.session.error_msg;
+  
+  // Add current year for footer copyright
+  res.locals.currentYear = new Date().getFullYear();
+  
+  // Add active path for navigation highlighting
+  res.locals.path = req.path;
+  
   next();
 });
 
@@ -56,9 +69,13 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('error', {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).render('error', {
     title: 'Server Error',
-    message: 'Something went wrong on our end.'
+    message: process.env.NODE_ENV === 'production' 
+      ? 'Something went wrong on our end.' 
+      : err.message || 'Internal Server Error',
+    error: process.env.NODE_ENV === 'production' ? {} : err
   });
 });
 

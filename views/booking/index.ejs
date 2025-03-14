@@ -1,116 +1,150 @@
 <%- include('../partials/header') %>
 
-<div class="row mb-4">
-  <div class="col-md-12">
-    <h1 class="mb-4">Book Your Massage</h1>
-    <p class="lead">Fill out the form below to schedule your massage appointment.</p>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-body">
-        <form id="bookingForm" action="/booking" method="POST">
-          <div class="mb-3">
-            <label for="name" class="form-label">Full Name *</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-          </div>
-          
-          <div class="mb-3">
-            <label for="email" class="form-label">Email Address *</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-          </div>
-          
-          <div class="mb-3">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" name="phone">
-          </div>
-          
-          <div class="mb-3">
-            <label for="serviceId" class="form-label">Select Service *</label>
-            <select class="form-select" id="serviceId" name="serviceId" required>
-              <option value="">-- Select a Service --</option>
-              <% if (services && services.length > 0) { %>
-                <% services.forEach(service => { %>
-                  <option value="<%= service.id %>" data-duration="<%= service.duration %>">
-                    <%= service.name %> (<%= service.duration %> min - $<%= service.price %>)
-                  </option>
-                <% }) %>
-              <% } %>
-            </select>
-          </div>
-          
-          <div class="mb-3">
-            <label for="date" class="form-label">Select Date *</label>
-            <input type="date" class="form-control" id="date" name="date" required>
-          </div>
-          
-          <div class="mb-3">
-            <label for="time" class="form-label">Select Time *</label>
-            <select class="form-select" id="time" name="time" required disabled>
-              <option value="">-- Select Date and Service First --</option>
-            </select>
-            <div id="timeLoading" class="d-none mt-2">
-              <div class="spinner-border spinner-border-sm text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-              <span class="ms-2">Loading available time slots...</span>
-            </div>
-          </div>
-          
-          <div class="mb-3">
-            <label for="notes" class="form-label">Special Requests or Notes</label>
-            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
-          </div>
-          
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Book Appointment</button>
-          </div>
-        </form>
-      </div>
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1 class="mb-3">Book Your Massage</h1>
+      <p class="lead">Fill out the form below to schedule your massage appointment.</p>
     </div>
   </div>
-  
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-header">
-        <h5 class="mb-0">Business Hours</h5>
-      </div>
-      <div class="card-body">
-        <ul class="list-group list-group-flush">
-          <% 
-          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-          if (businessHours && businessHours.length > 0) { 
-            businessHours.forEach(hours => { 
-          %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <%= days[hours.dayOfWeek] %>
-              <% if (hours.isActive) { %>
-                <span><%= hours.openTime.substring(0, 5) %> - <%= hours.closeTime.substring(0, 5) %></span>
-              <% } else { %>
-                <span class="text-danger">Closed</span>
-              <% } %>
-            </li>
-          <% }); } else { %>
-            <li class="list-group-item">Business hours not available</li>
-          <% } %>
-        </ul>
+
+  <% if (locals.error) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <% if (locals.success) { %>
+    <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert">
+      <%= success %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card shadow-custom">
+        <div class="card-body">
+          <form id="bookingForm" action="/booking" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name *</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+              <div class="invalid-feedback">
+                Please provide your full name.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address *</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+              <div class="invalid-feedback">
+                Please provide a valid email address.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number *</label>
+              <input type="tel" class="form-control" id="phone" name="phone" required>
+              <div class="invalid-feedback">
+                Please provide your phone number.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="serviceId" class="form-label">Select Service *</label>
+              <select class="form-select" id="serviceId" name="serviceId" required>
+                <option value="">-- Select a Service --</option>
+                <% if (services && services.length > 0) { %>
+                  <% services.forEach(service => { %>
+                    <option value="<%= service.id %>" data-duration="<%= service.duration %>">
+                      <%= service.name %> (<%= service.duration %> min - $<%= service.price %>)
+                    </option>
+                  <% }) %>
+                <% } %>
+              </select>
+              <div class="invalid-feedback">
+                Please select a service.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="date" class="form-label">Select Date *</label>
+              <input type="date" class="form-control" id="date" name="date" required>
+              <div class="invalid-feedback">
+                Please select a date.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="time" class="form-label">Select Time *</label>
+              <select class="form-select" id="time" name="time" required disabled>
+                <option value="">-- Select Date and Service First --</option>
+              </select>
+              <div id="timeLoading" class="d-none mt-2">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="ms-2">Loading available time slots...</span>
+              </div>
+              <div class="invalid-feedback">
+                Please select a time slot.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="notes" class="form-label">Special Requests or Notes</label>
+              <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Book Appointment</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
     
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0">Booking Information</h5>
+    <div class="col-md-4">
+      <div class="card shadow-custom mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Business Hours</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush business-hours-table">
+            <% 
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            if (businessHours && businessHours.length > 0) { 
+              businessHours.forEach(hours => { 
+            %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= days[hours.dayOfWeek] %>
+                <% if (hours.isActive) { %>
+                  <span><%= hours.openTime.substring(0, 5) %> - <%= hours.closeTime.substring(0, 5) %></span>
+                <% } else { %>
+                  <span class="closed">Closed</span>
+                <% } %>
+              </li>
+            <% }); } else { %>
+              <li class="list-group-item">Business hours not available</li>
+            <% } %>
+          </ul>
+        </div>
       </div>
-      <div class="card-body">
-        <p>Please note the following:</p>
-        <ul>
-          <li>Arrive 10 minutes before your appointment time.</li>
-          <li>Cancellations must be made at least 24 hours in advance.</li>
-          <li>Payment is due at the time of service.</li>
-          <li>We accept cash, credit cards, and mobile payments.</li>
-        </ul>
+      
+      <div class="card shadow-custom">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Booking Information</h5>
+        </div>
+        <div class="card-body">
+          <p>Please note the following:</p>
+          <ul>
+            <li>Arrive 10 minutes before your appointment time.</li>
+            <li>Cancellations must be made at least 24 hours in advance.</li>
+            <li>Payment is due at the time of service.</li>
+            <li>We accept cash, credit cards, and mobile payments.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -130,6 +164,14 @@
     const dd = String(today.getDate()).padStart(2, '0');
     dateInput.min = `${yyyy}-${mm}-${dd}`;
     
+    // Set maximum date to 3 months from now
+    const maxDate = new Date();
+    maxDate.setMonth(maxDate.getMonth() + 3);
+    const maxYyyy = maxDate.getFullYear();
+    const maxMm = String(maxDate.getMonth() + 1).padStart(2, '0');
+    const maxDd = String(maxDate.getDate()).padStart(2, '0');
+    dateInput.max = `${maxYyyy}-${maxMm}-${maxDd}`;
+    
     // Function to fetch available time slots
     async function fetchTimeSlots() {
       const date = dateInput.value;
@@ -146,6 +188,11 @@
       
       try {
         const response = await fetch(`/booking/available-slots?date=${date}&serviceId=${serviceId}`);
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
         const data = await response.json();
         
         timeSelect.innerHTML = '';
@@ -191,6 +238,11 @@
       const serviceOption = serviceSelect.querySelector(`option[value="${serviceParam}"]`);
       if (serviceOption) {
         serviceOption.selected = true;
+        // If we have a service pre-selected and date is already set to today by default,
+        // trigger the time slot fetch
+        if (dateInput.value) {
+          fetchTimeSlots();
+        }
       }
     }
   });

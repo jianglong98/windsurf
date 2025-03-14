@@ -3,17 +3,19 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize Bootstrap tooltips
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function(tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
-  
-  // Initialize Bootstrap popovers
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-  popoverTriggerList.map(function(popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl);
-  });
+  // Initialize Bootstrap tooltips if Bootstrap is available
+  if (typeof bootstrap !== 'undefined') {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Initialize Bootstrap popovers
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.map(function(popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl);
+    });
+  }
   
   // Auto-dismiss alerts
   const autoAlerts = document.querySelectorAll('.alert-dismissible.auto-dismiss');
@@ -71,5 +73,17 @@ document.addEventListener('DOMContentLoaded', function() {
       
       form.classList.add('was-validated');
     }, false);
+  });
+
+  // Add active class to current nav item
+  const currentLocation = window.location.pathname;
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+  
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentLocation || 
+        (href !== '/' && currentLocation.startsWith(href))) {
+      link.classList.add('active');
+    }
   });
 });

@@ -19,14 +19,19 @@ router.get('/login', (req, res) => {
   }
   res.render('admin/login', { 
     title: 'Admin Login',
-    user: null
+    user: req.session.user || null,
+    error_msg: req.session.error_msg || null
   });
+  // Clear session error message after displaying
+  delete req.session.error_msg;
 });
 
 // Admin login process
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log('Login attempt:', { email });
     
     // Validate input
     if (!email || !password) {
@@ -37,6 +42,8 @@ router.post('/login', async (req, res) => {
     // Find user by email
     const user = await User.findOne({ where: { email } });
     
+    console.log('User found:', user ? { id: user.id, email: user.email, isAdmin: user.isAdmin } : 'No user found');
+    
     if (!user || !user.isAdmin) {
       req.session.error_msg = 'Invalid email or password';
       return res.redirect('/admin/login');
@@ -44,6 +51,7 @@ router.post('/login', async (req, res) => {
     
     // Validate password
     const isMatch = await user.validatePassword(password);
+    console.log('Password validation result:', isMatch);
     
     if (!isMatch) {
       req.session.error_msg = 'Invalid email or password';
@@ -58,7 +66,17 @@ router.post('/login', async (req, res) => {
       isAdmin: user.isAdmin
     };
     
-    res.redirect('/admin/dashboard');
+    console.log('Session set:', req.session.user);
+    
+    // Save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        req.session.error_msg = 'An error occurred during login';
+        return res.redirect('/admin/login');
+      }
+      res.redirect('/admin/dashboard');
+    });
   } catch (error) {
     console.error('Login error:', error);
     req.session.error_msg = 'An error occurred during login';

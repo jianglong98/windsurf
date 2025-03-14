@@ -49,7 +49,23 @@ module.exports = (sequelize) => {
 
   // Instance method to validate password
   User.prototype.validatePassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+    try {
+      console.log('Validating password:');
+      console.log('Input password:', password);
+      console.log('Stored hash:', this.password);
+      
+      if (!this.password) {
+        console.log('No password stored for user');
+        return false;
+      }
+      
+      const result = await bcrypt.compare(password, this.password);
+      console.log('bcrypt.compare result:', result);
+      return result;
+    } catch (error) {
+      console.error('Password validation error:', error);
+      return false;
+    }
   };
 
   return User;

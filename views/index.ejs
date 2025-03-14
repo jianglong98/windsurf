@@ -1,68 +1,100 @@
 <%- include('partials/header') %>
 
-<div class="jumbotron bg-light p-5 rounded-3 mb-4">
+<div class="hero text-center">
   <div class="container">
     <h1 class="display-4">Welcome to Massage Booking Service</h1>
     <p class="lead">Experience relaxation and rejuvenation with our professional massage therapy services.</p>
-    <a href="/booking" class="btn btn-primary btn-lg">Book Now</a>
+    <a href="/booking" class="btn btn-primary btn-lg btn-book-now">Book Your Appointment</a>
   </div>
 </div>
 
-<div class="row mb-4">
-  <div class="col-md-12">
-    <h2 class="text-center mb-4">Our Services</h2>
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <h2 class="text-center mb-4">Our Services</h2>
+      <p class="text-center mb-5">Choose from our range of professional massage services designed to meet your wellness needs.</p>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <% if (services && services.length > 0) { %>
-    <% services.forEach(service => { %>
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title"><%= service.name %></h5>
-            <h6 class="card-subtitle mb-2 text-muted"><%= service.duration %> minutes - $<%= service.price %></h6>
-            <p class="card-text"><%= service.description %></p>
-            <a href="/booking?service=<%= service.id %>" class="btn btn-outline-primary">Book This Service</a>
+  <div class="row">
+    <% if (services && services.length > 0) { %>
+      <% services.forEach(service => { %>
+        <div class="col-md-4 mb-4">
+          <div class="card service-card h-100">
+            <div class="card-body">
+              <h5 class="card-title"><%= service.name %></h5>
+              <div class="d-flex justify-content-between mb-3">
+                <span class="duration"><i class="bi bi-clock"></i> <%= service.duration %> minutes</span>
+                <span class="price">$<%= service.price %></span>
+              </div>
+              <p class="card-text"><%= service.description %></p>
+              <div class="d-grid">
+                <a href="/booking?service=<%= service.id %>" class="btn btn-outline-primary">Book This Service</a>
+              </div>
+            </div>
           </div>
         </div>
+      <% }) %>
+    <% } else { %>
+      <div class="col-12 text-center">
+        <div class="alert alert-info">
+          <p class="mb-0">No services available at the moment. Please check back later.</p>
+        </div>
       </div>
-    <% }) %>
-  <% } else { %>
-    <div class="col-12 text-center">
-      <p>No services available at the moment. Please check back later.</p>
-    </div>
-  <% } %>
-</div>
+    <% } %>
+  </div>
 
-<div class="row mt-5">
-  <div class="col-md-12">
-    <h2 class="text-center mb-4">Why Choose Us?</h2>
+  <div class="row mt-5 mb-4">
+    <div class="col-md-12">
+      <h2 class="text-center mb-4">Why Choose Us?</h2>
+      <p class="text-center mb-5">We're dedicated to providing you with the best massage experience possible.</p>
+    </div>
   </div>
-</div>
 
-<div class="row mb-5">
-  <div class="col-md-4 mb-4">
-    <div class="card h-100">
-      <div class="card-body text-center">
-        <h3 class="h5">Professional Therapists</h3>
-        <p>Our licensed massage therapists are experienced professionals dedicated to your wellness.</p>
+  <div class="row mb-5">
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-custom">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-person-check" style="font-size: 2rem; color: #007bff;"></i>
+          </div>
+          <h3 class="h5">Professional Therapists</h3>
+          <p>Our licensed massage therapists are experienced professionals dedicated to your wellness.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-custom">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-calendar-check" style="font-size: 2rem; color: #007bff;"></i>
+          </div>
+          <h3 class="h5">Convenient Booking</h3>
+          <p>Our online booking system makes it easy to schedule your appointment anytime, anywhere.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-custom">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-heart" style="font-size: 2rem; color: #007bff;"></i>
+          </div>
+          <h3 class="h5">Relaxing Environment</h3>
+          <p>Our tranquil space is designed to help you unwind and maximize the benefits of your massage.</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4 mb-4">
-    <div class="card h-100">
-      <div class="card-body text-center">
-        <h3 class="h5">Convenient Booking</h3>
-        <p>Our online booking system makes it easy to schedule your appointment anytime, anywhere.</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4 mb-4">
-    <div class="card h-100">
-      <div class="card-body text-center">
-        <h3 class="h5">Relaxing Environment</h3>
-        <p>Our tranquil space is designed to help you unwind and maximize the benefits of your massage.</p>
+
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div class="card bg-light-blue rounded-custom">
+        <div class="card-body p-4 text-center">
+          <h3>Ready to experience the benefits of massage therapy?</h3>
+          <p class="mb-4">Book your appointment today and take the first step towards relaxation and wellness.</p>
+          <a href="/booking" class="btn btn-primary btn-lg">Book Now</a>
+        </div>
       </div>
     </div>
   </div>
