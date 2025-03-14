@@ -1,8 +1,9 @@
 // Authentication middleware
 const isAdmin = (req, res, next) => {
-    // For testing purposes, we'll bypass authentication
-    // In production, you would check req.session.isAdmin
-    req.session.isAdmin = true;
+    if (!req.session || !req.session.isAdmin) {
+        req.flash('error', 'Please login to access admin area');
+        return res.redirect('/admin/login');
+    }
     next();
 };
 
