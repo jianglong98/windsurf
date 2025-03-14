@@ -1,0 +1,144 @@
+<%- include('../partials/header') %>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h1 class="mb-4">All Bookings</h1>
+    <p class="lead">View and manage all massage bookings.</p>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Filter Bookings</h5>
+      </div>
+      <div class="card-body">
+        <form action="/admin/bookings" method="GET">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status">
+                <option value="">All Statuses</option>
+                <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="confirmed" <%= filters.status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+                <option value="cancelled" <%= filters.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" value="<%= filters.startDate %>">
+            </div>
+            <div class="col-md-3">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" value="<%= filters.endDate %>">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <div class="d-grid w-100">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Booking List</h5>
+        <a href="/admin/dashboard" class="btn btn-sm btn-outline-primary">Back to Dashboard</a>
+      </div>
+      <div class="card-body">
+        <% if (bookings && bookings.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Client</th>
+                  <th>Service</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% bookings.forEach(booking => { %>
+                  <tr>
+                    <td>
+                      <% 
+                        const date = new Date(booking.date);
+                        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                        const formattedDate = date.toLocaleDateString('en-US', options);
+                      %>
+                      <%= formattedDate %>
+                    </td>
+                    <td>
+                      <% 
+                        const [hours, minutes] = booking.time.split(':');
+                        const hour = parseInt(hours, 10);
+                        const ampm = hour >= 12 ? 'PM' : 'AM';
+                        const displayHour = hour % 12 || 12;
+                      %>
+                      <%= displayHour %>:<%= minutes %> <%= ampm %>
+                    </td>
+                    <td>
+                      <%= booking.User.name %><br>
+                      <small class="text-muted"><%= booking.User.email %></small>
+                      <% if (booking.User.phone) { %>
+                        <br><small class="text-muted"><%= booking.User.phone %></small>
+                      <% } %>
+                    </td>
+                    <td><%= booking.Service.name %> (<%= booking.Service.duration %> min)</td>
+                    <td>$<%= booking.Service.price %></td>
+                    <td>
+                      <span class="badge <%= booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning' %>">
+                        <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                          Update
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <form action="/admin/bookings/<%= booking.id %>/status" method="POST">
+                              <input type="hidden" name="status" value="confirmed">
+                              <button type="submit" class="dropdown-item">Confirm</button>
+                            </form>
+                          </li>
+                          <li>
+                            <form action="/admin/bookings/<%= booking.id %>/status" method="POST">
+                              <input type="hidden" name="status" value="cancelled">
+                              <button type="submit" class="dropdown-item">Cancel</button>
+                            </form>
+                          </li>
+                          <li>
+                            <form action="/admin/bookings/<%= booking.id %>/status" method="POST">
+                              <input type="hidden" name="status" value="pending">
+                              <button type="submit" class="dropdown-item">Mark as Pending</button>
+                            </form>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="mb-0">No bookings found matching the selected filters.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

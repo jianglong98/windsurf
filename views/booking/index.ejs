@@ -1,0 +1,199 @@
+<%- include('../partials/header') %>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h1 class="mb-4">Book Your Massage</h1>
+    <p class="lead">Fill out the form below to schedule your massage appointment.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <form id="bookingForm" action="/booking" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name *</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address *</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" name="phone">
+          </div>
+          
+          <div class="mb-3">
+            <label for="serviceId" class="form-label">Select Service *</label>
+            <select class="form-select" id="serviceId" name="serviceId" required>
+              <option value="">-- Select a Service --</option>
+              <% if (services && services.length > 0) { %>
+                <% services.forEach(service => { %>
+                  <option value="<%= service.id %>" data-duration="<%= service.duration %>">
+                    <%= service.name %> (<%= service.duration %> min - $<%= service.price %>)
+                  </option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="date" class="form-label">Select Date *</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="time" class="form-label">Select Time *</label>
+            <select class="form-select" id="time" name="time" required disabled>
+              <option value="">-- Select Date and Service First --</option>
+            </select>
+            <div id="timeLoading" class="d-none mt-2">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="ms-2">Loading available time slots...</span>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="notes" class="form-label">Special Requests or Notes</label>
+            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+          </div>
+          
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Business Hours</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <% 
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          if (businessHours && businessHours.length > 0) { 
+            businessHours.forEach(hours => { 
+          %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <%= days[hours.dayOfWeek] %>
+              <% if (hours.isActive) { %>
+                <span><%= hours.openTime.substring(0, 5) %> - <%= hours.closeTime.substring(0, 5) %></span>
+              <% } else { %>
+                <span class="text-danger">Closed</span>
+              <% } %>
+            </li>
+          <% }); } else { %>
+            <li class="list-group-item">Business hours not available</li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Booking Information</h5>
+      </div>
+      <div class="card-body">
+        <p>Please note the following:</p>
+        <ul>
+          <li>Arrive 10 minutes before your appointment time.</li>
+          <li>Cancellations must be made at least 24 hours in advance.</li>
+          <li>Payment is due at the time of service.</li>
+          <li>We accept cash, credit cards, and mobile payments.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('date');
+    const serviceSelect = document.getElementById('serviceId');
+    const timeSelect = document.getElementById('time');
+    const timeLoading = document.getElementById('timeLoading');
+    
+    // Set minimum date to today
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    dateInput.min = `${yyyy}-${mm}-${dd}`;
+    
+    // Function to fetch available time slots
+    async function fetchTimeSlots() {
+      const date = dateInput.value;
+      const serviceId = serviceSelect.value;
+      
+      if (!date || !serviceId) {
+        timeSelect.innerHTML = '<option value="">-- Select Date and Service First --</option>';
+        timeSelect.disabled = true;
+        return;
+      }
+      
+      timeSelect.disabled = true;
+      timeLoading.classList.remove('d-none');
+      
+      try {
+        const response = await fetch(`/booking/available-slots?date=${date}&serviceId=${serviceId}`);
+        const data = await response.json();
+        
+        timeSelect.innerHTML = '';
+        
+        if (data.success && data.slots.length > 0) {
+          timeSelect.innerHTML = '<option value="">-- Select a Time --</option>';
+          
+          data.slots.forEach(slot => {
+            const option = document.createElement('option');
+            option.value = slot;
+            
+            // Format time for display (e.g., "14:30" to "2:30 PM")
+            const [hours, minutes] = slot.split(':');
+            const hour = parseInt(hours, 10);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            
+            option.textContent = `${displayHour}:${minutes} ${ampm}`;
+            timeSelect.appendChild(option);
+          });
+          
+          timeSelect.disabled = false;
+        } else {
+          timeSelect.innerHTML = '<option value="">No available slots for selected date</option>';
+        }
+      } catch (error) {
+        console.error('Error fetching time slots:', error);
+        timeSelect.innerHTML = '<option value="">Error loading time slots</option>';
+      } finally {
+        timeLoading.classList.add('d-none');
+      }
+    }
+    
+    // Event listeners
+    dateInput.addEventListener('change', fetchTimeSlots);
+    serviceSelect.addEventListener('change', fetchTimeSlots);
+    
+    // Check if URL has service parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+      const serviceOption = serviceSelect.querySelector(`option[value="${serviceParam}"]`);
+      if (serviceOption) {
+        serviceOption.selected = true;
+      }
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>

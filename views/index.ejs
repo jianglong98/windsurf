@@ -1,53 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relaxation Massage Spa</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <nav>
-        <div class="nav-container">
-            <h1>Relaxation Spa</h1>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/services">Services</a></li>
-                <li><a href="/booking">Book Now</a></li>
-            </ul>
+<%- include('partials/header') %>
+
+<div class="jumbotron bg-light p-5 rounded-3 mb-4">
+  <div class="container">
+    <h1 class="display-4">Welcome to Massage Booking Service</h1>
+    <p class="lead">Experience relaxation and rejuvenation with our professional massage therapy services.</p>
+    <a href="/booking" class="btn btn-primary btn-lg">Book Now</a>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h2 class="text-center mb-4">Our Services</h2>
+  </div>
+</div>
+
+<div class="row">
+  <% if (services && services.length > 0) { %>
+    <% services.forEach(service => { %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= service.name %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= service.duration %> minutes - $<%= service.price %></h6>
+            <p class="card-text"><%= service.description %></p>
+            <a href="/booking?service=<%= service.id %>" class="btn btn-outline-primary">Book This Service</a>
+          </div>
         </div>
-    </nav>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="col-12 text-center">
+      <p>No services available at the moment. Please check back later.</p>
+    </div>
+  <% } %>
+</div>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Welcome to Relaxation Spa</h1>
-            <p>Experience the ultimate in relaxation and wellness</p>
-            <a href="/booking" class="cta-button">Book Your Session</a>
-        </div>
-    </header>
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h2 class="text-center mb-4">Why Choose Us?</h2>
+  </div>
+</div>
 
-    <main>
-        <section class="features">
-            <h2>Why Choose Us?</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>Expert Therapists</h3>
-                    <p>Our certified therapists provide top-quality massage services</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Peaceful Environment</h3>
-                    <p>Relax in our tranquil and comfortable spa setting</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Flexible Scheduling</h3>
-                    <p>Book appointments that fit your busy schedule</p>
-                </div>
-            </div>
-        </section>
-    </main>
+<div class="row mb-5">
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h3 class="h5">Professional Therapists</h3>
+        <p>Our licensed massage therapists are experienced professionals dedicated to your wellness.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h3 class="h5">Convenient Booking</h3>
+        <p>Our online booking system makes it easy to schedule your appointment anytime, anywhere.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <h3 class="h5">Relaxing Environment</h3>
+        <p>Our tranquil space is designed to help you unwind and maximize the benefits of your massage.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <footer>
-        <p>&copy; 2025 Relaxation Spa. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+<%- include('partials/footer') %>

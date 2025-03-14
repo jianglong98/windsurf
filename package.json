@@ -1,23 +1,41 @@
 {
-  "name": "massage-booking",
+  "name": "windsurf",
   "version": "1.0.0",
-  "description": "Massage booking website",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "seed": "node seeders/seed.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jianglong98/windsurf.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jianglong98/windsurf/issues"
+  },
+  "homepage": "https://github.com/jianglong98/windsurf#readme",
+  "description": "This project is a massage booking website built with Node.js, Express, EJS templating, and an SQLite database using Sequelize ORM.",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "connect-flash": "^0.1.1",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "mongoose": "^7.3.1",
     "sequelize": "^6.37.6",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "puppeteer": "^24.4.0",
+    "supertest": "^7.0.0"
   }
 }

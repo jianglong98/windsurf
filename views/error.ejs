@@ -1,11 +1,13 @@
 <%- include('partials/header') %>
 
-<div class="container mt-4">
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Error</h4>
-        <p><%= error %></p>
+<div class="row justify-content-center">
+  <div class="col-md-8 text-center">
+    <div class="mt-5 mb-5">
+      <h1 class="display-1 text-danger"><%= title %></h1>
+      <p class="lead"><%= message %></p>
+      <a href="/" class="btn btn-primary">Return to Home</a>
     </div>
-    <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
+  </div>
 </div>
 
 <%- include('partials/footer') %>

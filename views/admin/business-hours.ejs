@@ -1,149 +1,131 @@
 <%- include('../partials/header') %>
-<%- include('../partials/admin-nav') %>
 
-<div class="container mt-4">
-    <h2>Business Hours Management</h2>
-
-    <% if (messages.error && messages.error.length > 0) { %>
-        <div class="alert alert-danger" role="alert">
-            <%= messages.error %>
-        </div>
-    <% } %>
-
-    <% if (messages.success && messages.success.length > 0) { %>
-        <div class="alert alert-success" role="alert">
-            <%= messages.success %>
-        </div>
-    <% } %>
-
-    <!-- Default Hours -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Default Business Hours</h3>
-        </div>
-        <div class="card-body">
-            <form action="/admin/business-hours/default" method="POST">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Weekday Hours</h4>
-                        <div class="mb-3">
-                            <label for="weekdayOpen" class="form-label">Opening Time</label>
-                            <input type="time" class="form-control" id="weekdayOpen" name="weekdayOpen" value="<%= weekday.openTime %>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="weekdayClose" class="form-label">Closing Time</label>
-                            <input type="time" class="form-control" id="weekdayClose" name="weekdayClose" value="<%= weekday.closeTime %>" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>Weekend Hours</h4>
-                        <div class="mb-3">
-                            <label for="weekendOpen" class="form-label">Opening Time</label>
-                            <input type="time" class="form-control" id="weekendOpen" name="weekendOpen" value="<%= weekend.openTime %>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="weekendClose" class="form-label">Closing Time</label>
-                            <input type="time" class="form-control" id="weekendClose" name="weekendClose" value="<%= weekend.closeTime %>" required>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Update Default Hours</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Specific Hours -->
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Specific Dates</h3>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSpecificHoursModal">
-                Add Specific Hours
-            </button>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Opening Time</th>
-                            <th>Closing Time</th>
-                            <th>Description</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% specificHours.forEach(function(hours) { %>
-                            <tr>
-                                <td><%= new Date(hours.date).toLocaleDateString() %></td>
-                                <td><%= hours.openTime %></td>
-                                <td><%= hours.closeTime %></td>
-                                <td><%= hours.description || '' %></td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning me-2" 
-                                            onclick="editSpecificHours('<%= hours.id %>', '<%= hours.date %>', '<%= hours.openTime %>', '<%= hours.closeTime %>', '<%= hours.description || '' %>')">
-                                        Edit
-                                    </button>
-                                    <form action="/admin/business-hours/specific/<%= hours.id %>/delete" method="POST" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h1 class="mb-4">Business Hours</h1>
+    <p class="lead">Manage your business operating hours for each day of the week.</p>
+  </div>
 </div>
 
-<!-- Add Specific Hours Modal -->
-<div class="modal fade" id="addSpecificHoursModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Specific Hours</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="/admin/business-hours/specific" method="POST">
-                <div class="modal-body">
-                    <input type="hidden" id="specificHoursId" name="id">
-                    <div class="mb-3">
-                        <label for="date" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date" name="date" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="openTime" class="form-label">Opening Time</label>
-                        <input type="time" class="form-control" id="openTime" name="openTime" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="closeTime" class="form-label">Closing Time</label>
-                        <input type="time" class="form-control" id="closeTime" name="closeTime" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description (Optional)</label>
-                        <input type="text" class="form-control" id="description" name="description">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Weekly Schedule</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Open Time</th>
+                <th>Close Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (businessHours && businessHours.length > 0) { %>
+                <% businessHours.forEach(hours => { %>
+                  <tr>
+                    <td><%= days[hours.dayOfWeek] %></td>
+                    <td><%= hours.openTime.substring(0, 5) %></td>
+                    <td><%= hours.closeTime.substring(0, 5) %></td>
+                    <td>
+                      <span class="badge <%= hours.isActive ? 'bg-success' : 'bg-danger' %>">
+                        <%= hours.isActive ? 'Open' : 'Closed' %>
+                      </span>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editHoursModal"
+                        data-id="<%= hours.id %>"
+                        data-day="<%= days[hours.dayOfWeek] %>"
+                        data-open="<%= hours.openTime.substring(0, 5) %>"
+                        data-close="<%= hours.closeTime.substring(0, 5) %>"
+                        data-active="<%= hours.isActive %>">
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="text-center">No business hours set up yet.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Edit Hours Modal -->
+<div class="modal fade" id="editHoursModal" tabindex="-1" aria-labelledby="editHoursModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editHoursModalLabel">Edit Business Hours</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editHoursForm" action="/admin/business-hours/" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Day</label>
+            <input type="text" class="form-control" id="editDay" disabled>
+          </div>
+          
+          <div class="mb-3">
+            <label for="openTime" class="form-label">Open Time</label>
+            <input type="time" class="form-control" id="openTime" name="openTime" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="closeTime" class="form-label">Close Time</label>
+            <input type="time" class="form-control" id="closeTime" name="closeTime" required>
+          </div>
+          
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="isActive" name="isActive">
+            <label class="form-check-label" for="isActive">Open for Business</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script>
-function editSpecificHours(id, date, openTime, closeTime, description) {
-    const modal = new bootstrap.Modal(document.getElementById('addSpecificHoursModal'));
-    document.getElementById('specificHoursId').value = id;
-    document.getElementById('date').value = date;
-    document.getElementById('openTime').value = openTime;
-    document.getElementById('closeTime').value = closeTime;
-    document.getElementById('description').value = description;
-    modal.show();
-}
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle edit hours modal
+    const editHoursModal = document.getElementById('editHoursModal');
+    if (editHoursModal) {
+      editHoursModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const day = button.getAttribute('data-day');
+        const openTime = button.getAttribute('data-open');
+        const closeTime = button.getAttribute('data-close');
+        const isActive = button.getAttribute('data-active') === 'true';
+        
+        const form = document.getElementById('editHoursForm');
+        form.action = `/admin/business-hours/${id}`;
+        
+        document.getElementById('editDay').value = day;
+        document.getElementById('openTime').value = openTime;
+        document.getElementById('closeTime').value = closeTime;
+        document.getElementById('isActive').checked = isActive;
+      });
+    }
+  });
 </script>
 
 <%- include('../partials/footer') %>

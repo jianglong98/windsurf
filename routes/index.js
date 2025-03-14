@@ -1,161 +1,56 @@
 const express = require('express');
 const router = express.Router();
-const { BusinessHours, Service, Booking } = require('../models');
+const { Service, BusinessHours } = require('../models');
 
 // Home page
 router.get('/', async (req, res) => {
-    try {
-        const services = await Service.findAll();
-        res.render('index', { services });
-    } catch (error) {
-        req.flash('error', 'Failed to load services');
-        res.status(500).render('error', { error: 'Failed to load services' });
-    }
+  try {
+    const services = await Service.findAll({ where: { isActive: true } });
+    res.render('index', { 
+      title: 'Massage Booking Service',
+      services,
+      user: req.session.user || null
+    });
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    res.render('index', { 
+      title: 'Massage Booking Service',
+      services: [],
+      user: req.session.user || null
+    });
+  }
+});
+
+// About page
+router.get('/about', (req, res) => {
+  res.render('about', { 
+    title: 'About Us',
+    user: req.session.user || null
+  });
+});
+
+// Contact page
+router.get('/contact', (req, res) => {
+  res.render('contact', { 
+    title: 'Contact Us',
+    user: req.session.user || null
+  });
 });
 
 // Services page
 router.get('/services', async (req, res) => {
-    try {
-        const services = await Service.findAll();
-        res.render('services', { services });
-    } catch (error) {
-        req.flash('error', 'Failed to load services');
-        res.status(500).render('error', { error: 'Failed to load services' });
-    }
-});
-
-// Booking page
-router.get('/booking', async (req, res) => {
-    try {
-        const services = await Service.findAll();
-        res.render('booking', { services });
-    } catch (error) {
-        req.flash('error', 'Failed to load booking page');
-        res.status(500).render('error', { error: 'Failed to load booking page' });
-    }
-});
-
-// Create booking
-router.post('/booking', async (req, res) => {
-    try {
-        const { name, email, date, time, serviceId } = req.body;
-        
-        // Validate the booking time against business hours
-        const specificHours = await BusinessHours.findOne({
-            where: {
-                date,
-                dayType: 'specific'
-            }
-        });
-
-        const dayOfWeek = new Date(date).getDay();
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        
-        const defaultHours = await BusinessHours.findOne({
-            where: {
-                dayType: isWeekend ? 'weekend' : 'weekday',
-                date: null
-            }
-        });
-
-        const hours = specificHours || defaultHours;
-        
-        if (!hours) {
-            req.flash('error', 'We are not open on this date');
-            return res.redirect('/booking');
-        }
-
-        // Check if the booking time is within business hours
-        const bookingTime = parseInt(time.replace(':', ''));
-        const openTime = parseInt(hours.openTime.replace(':', ''));
-        const closeTime = parseInt(hours.closeTime.replace(':', ''));
-
-        if (bookingTime < openTime || bookingTime > closeTime) {
-            req.flash('error', 'Selected time is outside business hours');
-            return res.redirect('/booking');
-        }
-
-        // Create the booking
-        await Booking.create({
-            name,
-            email,
-            date,
-            time,
-            ServiceId: serviceId,
-            status: 'pending'
-        });
-
-        req.flash('success', 'Booking created successfully');
-        res.redirect('/confirmation');
-    } catch (error) {
-        console.error('Error creating booking:', error);
-        req.flash('error', 'Failed to create booking');
-        res.redirect('/booking');
-    }
-});
-
-// Confirmation page
-router.get('/confirmation', (req, res) => {
-    res.render('confirmation', {
-        success: req.flash('success')
+  try {
+    const services = await Service.findAll({ where: { isActive: true } });
+    res.render('services', { 
+      title: 'Our Services',
+      services,
+      user: req.session.user || null
     });
-});
-
-// Check availability
-router.get('/availability', async (req, res) => {
-    try {
-        const { date } = req.query;
-        
-        // First check for specific hours on the given date
-        const specificHours = await BusinessHours.findOne({
-            where: {
-                date,
-                dayType: 'specific'
-            }
-        });
-
-        if (specificHours) {
-            return res.json({
-                available: true,
-                hours: {
-                    open: specificHours.openTime,
-                    close: specificHours.closeTime
-                }
-            });
-        }
-
-        // If no specific hours, check default hours based on weekday/weekend
-        const dayOfWeek = new Date(date).getDay();
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        
-        const defaultHours = await BusinessHours.findOne({
-            where: {
-                dayType: isWeekend ? 'weekend' : 'weekday',
-                date: null
-            }
-        });
-
-        if (defaultHours) {
-            return res.json({
-                available: true,
-                hours: {
-                    open: defaultHours.openTime,
-                    close: defaultHours.closeTime
-                }
-            });
-        }
-
-        res.json({
-            available: false,
-            message: 'No business hours set for this date'
-        });
-    } catch (error) {
-        console.error('Error checking availability:', error);
-        res.status(500).json({
-            available: false,
-            message: 'Error checking availability'
-        });
-    }
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    req.session.error_msg = 'Failed to load services. Please try again.';
+    res.redirect('/');
+  }
 });
 
 module.exports = router;
