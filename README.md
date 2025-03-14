@@ -2,6 +2,8 @@
 
 A web application for managing massage bookings with an admin dashboard.
 
+*Last modified: March 13, 2025*
+
 ## Features
 
 - Book massage appointments
