@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('Login attempt:', { email });
+    console.log('Login attempt:', { email, passwordProvided: !!password });
     
     // Validate input
     if (!email || !password) {
@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
     // Find user by email
     const user = await User.findOne({ where: { email } });
     
-    console.log('User found:', user ? { id: user.id, email: user.email, isAdmin: user.isAdmin } : 'No user found');
+    console.log('User found:', user ? { id: user.id, email: user.email, isAdmin: user.isAdmin, passwordExists: !!user.password } : 'No user found');
     
     if (!user || !user.isAdmin) {
       req.session.error_msg = 'Invalid email or password';

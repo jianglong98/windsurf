@@ -51,8 +51,9 @@ module.exports = (sequelize) => {
   User.prototype.validatePassword = async function(password) {
     try {
       console.log('Validating password:');
-      console.log('Input password:', password);
-      console.log('Stored hash:', this.password);
+      console.log('Input password length:', password ? password.length : 0);
+      console.log('Stored hash exists:', !!this.password);
+      console.log('Stored hash first 20 chars:', this.password ? this.password.substring(0, 20) + '...' : 'none');
       
       if (!this.password) {
         console.log('No password stored for user');

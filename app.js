@@ -48,6 +48,22 @@ app.use((req, res, next) => {
   // Add current year for footer copyright
   res.locals.currentYear = new Date().getFullYear();
   
+  // Add business name for global use
+  res.locals.businessName = "Quality Massage LLC";
+  
+  // Add business address for global use
+  res.locals.businessAddress = {
+    street: "12229 Voyager Pkwy #160",
+    city: "Colorado Springs",
+    state: "CO",
+    zip: "80921",
+    full: "12229 Voyager Pkwy #160, Colorado Springs, CO 80921"
+  };
+  
+  // Add business contact information for global use
+  res.locals.businessPhone = "(719) 900-8424";
+  res.locals.businessEmail = "yilinzhang1969@gmail.com";
+  
   // Add active path for navigation highlighting
   res.locals.path = req.path;
   

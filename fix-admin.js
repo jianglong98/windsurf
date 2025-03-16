@@ -12,7 +12,7 @@ async function fixAdminUser() {
     console.log('Starting admin user fix...');
     
     // Find admin user
-    const admin = await User.findOne({ where: { email: 'admin@example.com' } });
+    const admin = await User.findOne({ where: { email: 'yilinzhang1969@gmail.com' } });
     
     if (!admin) {
       console.log('Admin user not found. Creating new admin user...');
@@ -23,7 +23,7 @@ async function fixAdminUser() {
       
       const newAdmin = await User.create({
         name: 'Admin User',
-        email: 'admin@example.com',
+        email: 'yilinzhang1969@gmail.com',
         password: hashedPassword,
         isAdmin: true
       });
@@ -55,7 +55,7 @@ async function fixAdminUser() {
     
     console.log('Admin user fix completed!');
     console.log('Admin login credentials:');
-    console.log('Email: admin@example.com');
+    console.log('Email: yilinzhang1969@gmail.com');
     console.log('Password: admin123');
     
   } catch (error) {

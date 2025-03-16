@@ -20,7 +20,7 @@ async function seedDatabase() {
     
     const admin = await User.create({
       name: 'Admin User',
-      email: 'admin@example.com',
+      email: 'yilinzhang1969@gmail.com',
       password: hashedPassword,
       isAdmin: true
     });
@@ -81,7 +81,7 @@ async function seedDatabase() {
 
     console.log('Database seeded successfully!');
     console.log('Admin login credentials:');
-    console.log('Email: admin@example.com');
+    console.log('Email: yilinzhang1969@gmail.com');
     console.log('Password: admin123');
 
   } catch (error) {

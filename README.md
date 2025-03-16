@@ -1,6 +1,13 @@
-# Massage Booking Website
+# Quality Massage LLC Booking Website
 
-This project is a massage booking website built with Node.js, Express, EJS templating, and an SQLite database using Sequelize ORM. It provides a complete solution for massage businesses to manage bookings, services, and business hours.
+This project is a massage booking website built with Node.js, Express, EJS templating, and an SQLite database using Sequelize ORM. It provides a complete solution for Quality Massage LLC to manage bookings, services, and business hours.
+
+## Business Information
+
+- **Name**: Quality Massage LLC
+- **Address**: 12229 Voyager Pkwy #160, Colorado Springs, CO 80921
+- **Phone**: (719) 900-8424
+- **Email**: yilinzhang1969@gmail.com
 
 ## Features
 

@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <h5>Massage Booking</h5>
+          <h5><%= businessName %></h5>
           <p>Your wellness journey starts here. Book your massage therapy session today.</p>
         </div>
         <div class="col-md-4">
@@ -20,14 +20,14 @@
         <div class="col-md-4">
           <h5>Contact Us</h5>
           <address>
-            <p>123 Wellness Street<br>Relaxation City, RC 12345</p>
-            <p>Email: info@massagebooking.com<br>Phone: (123) 456-7890</p>
+            <p><%= businessAddress.street %><br><%= businessAddress.city %>, <%= businessAddress.state %> <%= businessAddress.zip %></p>
+            <p>Email: <%= businessEmail %><br>Phone: <%= businessPhone %></p>
           </address>
         </div>
       </div>
       <div class="row mt-3">
         <div class="col-12 text-center">
-          <p class="mb-0">&copy; <%= new Date().getFullYear() %> Massage Booking Service. All rights reserved.</p>
+          <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= businessName %>. All rights reserved.</p>
         </div>
       </div>
     </div>

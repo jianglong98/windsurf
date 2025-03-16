@@ -61,7 +61,7 @@
           </div>
           <div class="ms-3">
             <h5>Address</h5>
-            <p class="mb-0">123 Wellness Street<br>Relaxation City, RC 12345</p>
+            <p class="mb-0"><%= businessAddress.street %><br><%= businessAddress.city %>, <%= businessAddress.state %> <%= businessAddress.zip %></p>
           </div>
         </div>
         
@@ -71,7 +71,7 @@
           </div>
           <div class="ms-3">
             <h5>Phone</h5>
-            <p class="mb-0">(123) 456-7890</p>
+            <p class="mb-0"><%= businessPhone %></p>
           </div>
         </div>
         
@@ -81,7 +81,7 @@
           </div>
           <div class="ms-3">
             <h5>Email</h5>
-            <p class="mb-0">info@massagebooking.com</p>
+            <p class="mb-0"><%= businessEmail %></p>
           </div>
         </div>
         

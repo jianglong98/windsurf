@@ -33,7 +33,7 @@ async function testAdminLogin() {
     
     // Fill in the login form
     console.log('Filling login form...');
-    await page.type('#email', 'admin@example.com');
+    await page.type('#email', 'yilinzhang1969@gmail.com');
     await page.type('#password', 'admin123');
     
     // Submit the form
@@ -50,11 +50,11 @@ async function testAdminLogin() {
     if (dashboardTitle.includes('Admin Dashboard')) {
       console.log('✅ SUCCESS: Admin login successful!');
       
-      // Check for admin dashboard elements
+      // Check dashboard content
       const dashboardHeading = await page.$eval('h1', el => el.textContent);
       console.log(`Dashboard heading: ${dashboardHeading}`);
       
-      // Test direct navigation to services page
+      // Test navigation to services page
       console.log('Testing direct navigation to services page...');
       await page.goto('http://localhost:3000/admin/services', { waitUntil: 'networkidle2' });
       
@@ -64,17 +64,17 @@ async function testAdminLogin() {
       if (servicesTitle.includes('Manage Services')) {
         console.log('✅ SUCCESS: Navigation to services page successful!');
         
-        // Check for services table
-        const servicesCount = await page.$$eval('table tbody tr', rows => rows.length);
-        console.log(`Number of services found: ${servicesCount}`);
+        // Check if services are displayed
+        const serviceRows = await page.$$('table tbody tr');
+        console.log(`Number of services found: ${serviceRows.length}`);
         
-        if (servicesCount > 0) {
+        if (serviceRows.length > 0) {
           console.log('✅ SUCCESS: Services are displayed in the table!');
         } else {
           console.log('❌ ERROR: No services found in the table');
         }
       } else {
-        console.log('❌ ERROR: Failed to navigate to services page');
+        console.log('❌ ERROR: Navigation to services page failed');
       }
       
       // Test navigation to business hours page
@@ -87,42 +87,29 @@ async function testAdminLogin() {
       if (hoursTitle.includes('Business Hours')) {
         console.log('✅ SUCCESS: Navigation to business hours page successful!');
       } else {
-        console.log('❌ ERROR: Failed to navigate to business hours page');
+        console.log('❌ ERROR: Navigation to business hours page failed');
       }
       
       // Test logout
       console.log('Testing logout...');
       await page.goto('http://localhost:3000/admin/logout', { waitUntil: 'networkidle2' });
       
-      const afterLogoutTitle = await page.title();
-      console.log(`After logout page title: ${afterLogoutTitle}`);
+      const logoutTitle = await page.title();
+      console.log(`After logout page title: ${logoutTitle}`);
       
-      if (afterLogoutTitle.includes('Admin Login')) {
+      if (logoutTitle.includes('Admin Login')) {
         console.log('✅ SUCCESS: Logout successful!');
       } else {
-        console.log('❌ ERROR: Failed to logout properly');
+        console.log('❌ ERROR: Logout failed');
       }
-      
     } else {
-      console.log('❌ ERROR: Admin login failed!');
-      
-      // Check if there's an error message
-      const errorMessage = await page.evaluate(() => {
-        const errorEl = document.querySelector('.alert-danger');
-        return errorEl ? errorEl.textContent.trim() : null;
-      });
-      
-      if (errorMessage) {
-        console.log(`Error message: ${errorMessage}`);
-      }
+      console.log('❌ ERROR: Admin login failed');
     }
-    
   } catch (error) {
-    console.error('Test failed with error:', error);
+    console.error('Test failed:', error);
   } finally {
-    // Close browser
-    await browser.close();
     console.log('Test completed.');
+    await browser.close();
   }
 }
 
