@@ -86,86 +86,62 @@ This project is a massage booking website built with Node.js, Express, EJS templ
 After seeding the database, you can use these accounts:
 
 - **Admin Account**:
-  - Email: admin@example.com
+  - Email: yilinzhang1969@gmail.com
   - Password: admin123
-
-- **User Account**:
-  - Email: john@example.com
-  - Password: password123
 
 ## Admin Login
 
 The admin login functionality provides secure access to the admin dashboard. To access the admin area:
 
-1. Navigate to `/admin/login` or click on the "Admin Login" link in the navigation bar
-2. Enter the admin credentials (email: admin@example.com, password: admin123)
-3. Upon successful login, you'll be redirected to the admin dashboard
-
-The admin dashboard provides access to:
-- Today's bookings and pending bookings overview
-- Services management (add, edit, view services)
-- Business hours management
-- All bookings with filtering options
-
-## Testing
-
-The project includes automated tests for the admin functionality:
-
-1. Install Puppeteer (if not already installed):
-   ```bash
-   npm install puppeteer
-   ```
-
-2. Run the admin login test:
-   ```bash
-   node test-admin-login.js
-   ```
-
-This test verifies:
-- Admin login functionality
-- Access to the admin dashboard
-- Navigation to services and business hours pages
-- Logout functionality
+1. Navigate to `/admin/login` or click on the "Admin Login" link in the footer
+2. Enter the admin credentials (email: yilinzhang1969@gmail.com, password: admin123)
+3. You will be redirected to the admin dashboard where you can manage bookings, services, and business hours
 
 ## Project Structure
 
 ```
-massage-booking/
-├── app.js                 # Main application entry point
-├── models/                # Database models
-│   ├── index.js           # Sequelize initialization
-│   ├── user.js            # User model
-│   ├── service.js         # Service model
-│   ├── booking.js         # Booking model
-│   └── businessHours.js   # Business hours model
-├── routes/                # Route handlers
-│   ├── index.js           # Main routes
-│   ├── admin.js           # Admin routes
-│   ├── bookings.js        # Booking routes
-│   └── services.js        # Service routes
-├── views/                 # EJS templates
-│   ├── partials/          # Reusable template parts
-│   ├── admin/             # Admin views
-│   ├── bookings/          # Booking views
-│   └── services/          # Service views
-├── public/                # Static assets
-│   ├── css/               # Stylesheets
-│   ├── js/                # Client-side JavaScript
-│   └── img/               # Images
-├── middleware/            # Custom middleware
-├── utils/                 # Utility functions
-├── test/                  # Test files
-├── seed.js                # Database seeder
-├── test-admin-login.js    # Admin login test script
-├── .env                   # Environment variables
-└── package.json           # Project dependencies
+windsurf/
+├── app.js               # Main application entry point
+├── models/              # Database models (Sequelize)
+│   ├── index.js         # Database connection and model associations
+│   ├── user.js          # User model
+│   ├── service.js       # Service model
+│   ├── booking.js       # Booking model
+│   └── businessHours.js # Business hours model
+├── public/              # Static assets
+│   ├── css/             # Stylesheets
+│   ├── js/              # Client-side JavaScript
+│   └── img/             # Images
+├── routes/              # Route handlers
+│   ├── index.js         # Main routes
+│   ├── booking.js       # Booking routes
+│   └── admin.js         # Admin routes
+├── views/               # EJS templates
+│   ├── partials/        # Reusable template parts
+│   │   ├── header.ejs   # Page header
+│   │   └── footer.ejs   # Page footer
+│   ├── admin/           # Admin area templates
+│   │   ├── dashboard.ejs # Admin dashboard
+│   │   ├── bookings.ejs  # Bookings management
+│   │   └── services.ejs  # Services management
+│   ├── index.ejs        # Homepage
+│   ├── booking.ejs      # Booking form
+│   ├── contact.ejs      # Contact page
+│   └── about.ejs        # About page
+├── seed.js              # Database seeder
+├── test-admin-login.js  # Admin login test script
+├── fix-admin.js         # Admin account fix script
+├── .env.example         # Example environment variables
+├── .gitignore           # Git ignore file
+├── package.json         # Project dependencies
+└── README.md            # Project documentation
 ```
 
 ## API Endpoints
 
 ### Public Endpoints
-- `GET /` - Home page
-- `GET /services` - List all active services
+- `GET /` - Homepage
+- `GET /services` - View all active services
 - `GET /booking` - Booking form
 - `POST /booking` - Create a new booking
 - `GET /about` - About page
@@ -174,36 +150,35 @@ massage-booking/
 
 ### Admin Endpoints
 - `GET /admin/login` - Admin login page
-- `POST /admin/login` - Admin login authentication
+- `POST /admin/login` - Admin login process
 - `GET /admin/dashboard` - Admin dashboard
-- `GET /admin/bookings` - All bookings
+- `GET /admin/bookings` - Manage bookings
 - `GET /admin/services` - Manage services
-- `POST /admin/services` - Add new service
-- `GET /admin/business-hours` - Business hours management
-- `POST /admin/business-hours/:id` - Update business hours
-- `GET /admin/logout` - Admin logout
+- `GET /admin/business-hours` - Manage business hours
+- `POST /admin/logout` - Admin logout
+
+## Development
+
+### Running Tests
+```bash
+npm test
+```
+
+### Testing Admin Login
+```bash
+node test-admin-login.js
+```
+
+### Fixing Admin Account
+If you encounter issues with the admin login, you can reset the admin account:
+```bash
+node fix-admin.js
+```
+
+## Maintenance
+
+### Updating Business Information
+Business information (name, address, phone, email) is stored as global variables in `app.js` for easy maintenance.
 
 ## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Future Enhancements
-
-- Email notifications for booking confirmations
-- SMS reminders for upcoming appointments
-- Online payment integration
-- Calendar view for bookings
-- Staff management with individual schedules
-- Multi-language support
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Contact
-
-Project Link: [https://github.com/jianglong98/windsurf](https://github.com/jianglong98/windsurf)
+This project is licensed under the MIT License.
