@@ -41,11 +41,11 @@
                       <%= displayHour %>:<%= minutes %> <%= ampm %>
                     </td>
                     <td>
-                      <%= booking.User.name %><br>
-                      <small class="text-muted"><%= booking.User.email %></small>
+                      <%= booking.User ? booking.User.name : 'Unknown User' %><br>
+                      <small class="text-muted"><%= booking.User && booking.User.email ? booking.User.email : booking.User && booking.User.phone ? booking.User.phone : 'No contact info' %></small>
                     </td>
-                    <td><%= booking.Service.name %></td>
-                    <td><%= booking.Service.duration %> min</td>
+                    <td><%= booking.Service ? booking.Service.name : 'Unknown Service' %></td>
+                    <td><%= booking.Service ? booking.Service.duration : '?' %> min</td>
                     <td>
                       <span class="badge <%= booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning' %>">
                         <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
@@ -125,10 +125,10 @@
                       <%= displayHour %>:<%= minutes %> <%= ampm %>
                     </td>
                     <td>
-                      <%= booking.User.name %><br>
-                      <small class="text-muted"><%= booking.User.email %></small>
+                      <%= booking.User ? booking.User.name : 'Unknown User' %><br>
+                      <small class="text-muted"><%= booking.User && booking.User.email ? booking.User.email : booking.User && booking.User.phone ? booking.User.phone : 'No contact info' %></small>
                     </td>
-                    <td><%= booking.Service.name %> (<%= booking.Service.duration %> min)</td>
+                    <td><%= booking.Service ? booking.Service.name : 'Unknown Service' %> (<%= booking.Service ? booking.Service.duration : '?' %> min)</td>
                     <td>
                       <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

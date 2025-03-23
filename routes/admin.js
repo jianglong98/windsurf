@@ -121,11 +121,22 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       order: [['date', 'ASC'], ['time', 'ASC']]
     });
     
+    // Filter out bookings with missing User or Service to prevent template errors
+    const validTodayBookings = todayBookings.filter(booking => booking.User && booking.Service);
+    const validPendingBookings = pendingBookings.filter(booking => booking.User && booking.Service);
+    
+    // Log any invalid bookings for debugging
+    const invalidBookings = [...todayBookings, ...pendingBookings].filter(booking => !booking.User || !booking.Service);
+    if (invalidBookings.length > 0) {
+      console.log(`Found ${invalidBookings.length} bookings with missing User or Service:`, 
+        invalidBookings.map(b => ({ id: b.id, hasUser: !!b.User, hasService: !!b.Service })));
+    }
+    
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       user: req.session.user,
-      todayBookings,
-      pendingBookings
+      todayBookings: validTodayBookings,
+      pendingBookings: validPendingBookings
     });
   } catch (error) {
     console.error('Dashboard error:', error);
@@ -139,34 +150,40 @@ router.get('/dashboard', isAdmin, async (req, res) => {
   }
 });
 
-// All bookings
+// Admin bookings page
 router.get('/bookings', isAdmin, async (req, res) => {
   try {
     const { status, startDate, endDate } = req.query;
-    const where = {};
     
-    // Filter by status if provided
-    if (status && ['pending', 'confirmed', 'cancelled'].includes(status)) {
-      where.status = status;
+    // Set default filter values
+    const filters = {
+      status: status || '',
+      startDate: startDate || '',
+      endDate: endDate || ''
+    };
+    
+    // Build where clause based on filters
+    const whereClause = {};
+    
+    if (status) {
+      whereClause.status = status;
     }
     
-    // Filter by date range if provided
-    if (startDate && endDate) {
-      where.date = {
-        [Op.between]: [startDate, endDate]
-      };
-    } else if (startDate) {
-      where.date = {
-        [Op.gte]: startDate
-      };
-    } else if (endDate) {
-      where.date = {
-        [Op.lte]: endDate
-      };
+    if (startDate || endDate) {
+      whereClause.date = {};
+      
+      if (startDate) {
+        whereClause.date[Op.gte] = startDate;
+      }
+      
+      if (endDate) {
+        whereClause.date[Op.lte] = endDate;
+      }
     }
     
+    // Get bookings
     const bookings = await Booking.findAll({
-      where,
+      where: whereClause,
       include: [
         { model: User, attributes: ['name', 'email', 'phone'] },
         { model: Service, attributes: ['name', 'duration', 'price'] }
@@ -174,16 +191,31 @@ router.get('/bookings', isAdmin, async (req, res) => {
       order: [['date', 'DESC'], ['time', 'ASC']]
     });
     
+    // Filter out bookings with missing User or Service to prevent template errors
+    const validBookings = bookings.filter(booking => booking.User && booking.Service);
+    
+    // Log any invalid bookings for debugging
+    const invalidBookings = bookings.filter(booking => !booking.User || !booking.Service);
+    if (invalidBookings.length > 0) {
+      console.log(`Found ${invalidBookings.length} bookings with missing User or Service in bookings page:`, 
+        invalidBookings.map(b => ({ id: b.id, hasUser: !!b.User, hasService: !!b.Service })));
+    }
+    
     res.render('admin/bookings', {
       title: 'All Bookings',
       user: req.session.user,
-      bookings,
-      filters: { status, startDate, endDate }
+      bookings: validBookings,
+      filters
     });
   } catch (error) {
-    console.error('Bookings error:', error);
-    req.session.error_msg = 'Failed to load bookings';
-    res.redirect('/admin/dashboard');
+    console.error('Bookings page error:', error);
+    req.session.error_msg = 'Failed to load bookings data';
+    res.render('admin/bookings', {
+      title: 'All Bookings',
+      user: req.session.user,
+      bookings: [],
+      filters: { status: '', startDate: '', endDate: '' }
+    });
   }
 });
 

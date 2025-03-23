@@ -88,14 +88,19 @@
                       <%= displayHour %>:<%= minutes %> <%= ampm %>
                     </td>
                     <td>
-                      <%= booking.User.name %><br>
-                      <small class="text-muted"><%= booking.User.email %></small>
-                      <% if (booking.User.phone) { %>
+                      <%= booking.User ? booking.User.name : 'Unknown User' %><br>
+                      <% if (booking.User && booking.User.email) { %>
+                        <small class="text-muted"><%= booking.User.email %></small>
+                      <% } %>
+                      <% if (booking.User && booking.User.phone) { %>
                         <br><small class="text-muted"><%= booking.User.phone %></small>
                       <% } %>
+                      <% if (!booking.User || (!booking.User.email && !booking.User.phone)) { %>
+                        <small class="text-muted">No contact info</small>
+                      <% } %>
                     </td>
-                    <td><%= booking.Service.name %> (<%= booking.Service.duration %> min)</td>
-                    <td>$<%= booking.Service.price %></td>
+                    <td><%= booking.Service ? booking.Service.name : 'Unknown Service' %> (<%= booking.Service ? booking.Service.duration : 'Unknown' %> min)</td>
+                    <td>$<%= booking.Service ? booking.Service.price.toFixed(2) : '0.00' %></td>
                     <td>
                       <span class="badge <%= booking.status === 'confirmed' ? 'bg-success' : booking.status === 'cancelled' ? 'bg-danger' : 'bg-warning' %>">
                         <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>

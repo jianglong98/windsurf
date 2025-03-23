@@ -23,6 +23,7 @@
   "homepage": "https://github.com/jianglong98/windsurf#readme",
   "description": "This project is a massage booking website built with Node.js, Express, EJS templating, and an SQLite database using Sequelize ORM.",
   "dependencies": {
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
