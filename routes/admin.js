@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User, Service, Booking, BusinessHours } = require('../models');
 const { Op } = require('sequelize');
+const emailService = require('../utils/emailService');
 
 // Middleware to check if user is authenticated as admin
 const isAdmin = (req, res, next) => {
@@ -197,7 +198,12 @@ router.post('/bookings/:id/status', isAdmin, async (req, res) => {
       return res.redirect('/admin/bookings');
     }
     
-    const booking = await Booking.findByPk(id);
+    const booking = await Booking.findByPk(id, {
+      include: [
+        { model: User },
+        { model: Service }
+      ]
+    });
     
     if (!booking) {
       req.session.error_msg = 'Booking not found';
@@ -206,7 +212,29 @@ router.post('/bookings/:id/status', isAdmin, async (req, res) => {
     
     await booking.update({ status });
     
-    req.session.success_msg = `Booking status updated to ${status}`;
+    // Send email notification if booking is confirmed
+    if (status === 'confirmed') {
+      try {
+        // For testing purposes, override the email to the test email
+        const testEmail = 'rcsiot123456@gmail.com';
+        const userWithTestEmail = { ...booking.User.dataValues, email: testEmail };
+        
+        const emailResult = await emailService.sendBookingConfirmation(
+          booking,
+          userWithTestEmail,
+          booking.Service
+        );
+        
+        console.log('Confirmation email sent:', emailResult);
+        req.session.success_msg = `Booking confirmed and notification email sent to ${testEmail}`;
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        req.session.success_msg = `Booking status updated to ${status}, but failed to send email notification`;
+      }
+    } else {
+      req.session.success_msg = `Booking status updated to ${status}`;
+    }
+    
     res.redirect('/admin/bookings');
   } catch (error) {
     console.error('Update booking error:', error);
