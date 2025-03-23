@@ -1,130 +1,130 @@
 <%- include('partials/header') %>
 
-<div class="row mb-4">
-  <div class="col-md-12">
-    <h1 class="mb-4">Our Services</h1>
-    <p class="lead">Discover our range of professional massage therapy services designed to meet your wellness needs.</p>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <% if (services && services.length > 0) { %>
-    <% services.forEach(service => { %>
-      <div class="col-md-6 mb-4">
-        <div class="card h-100">
-          <% if (service.imageUrl) { %>
-            <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" style="height: 200px; object-fit: cover;">
-          <% } %>
-          <div class="card-body">
-            <h2 class="card-title h4"><%= service.name %></h2>
-            <div class="d-flex justify-content-between mb-3">
-              <span class="badge bg-primary rounded-pill"><%= service.duration %> minutes</span>
-              <span class="text-primary fw-bold">$<%= service.price %></span>
-            </div>
-            <p class="card-text"><%= service.description %></p>
-            <div class="d-grid">
-              <a href="/booking?service=<%= service.id %>" class="btn btn-outline-primary">Book This Service</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% }) %>
-  <% } else { %>
-    <div class="col-12 text-center">
-      <p>No services available at the moment. Please check back later.</p>
-    </div>
-  <% } %>
-</div>
-
-<div class="row mb-5">
-  <div class="col-md-12">
-    <div class="card bg-light">
-      <div class="card-body">
-        <h2 class="card-title h4 text-center mb-4">Massage Benefits</h2>
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <div class="text-center">
-              <i class="bi bi-heart fs-1 text-primary mb-3"></i>
-              <h3 class="h5">Stress Reduction</h3>
-              <p>Massage therapy helps reduce stress hormones and promotes relaxation.</p>
-            </div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <div class="text-center">
-              <i class="bi bi-activity fs-1 text-primary mb-3"></i>
-              <h3 class="h5">Pain Relief</h3>
-              <p>Alleviates muscle tension and chronic pain conditions.</p>
-            </div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <div class="text-center">
-              <i class="bi bi-droplet fs-1 text-primary mb-3"></i>
-              <h3 class="h5">Improved Circulation</h3>
-              <p>Enhances blood flow and promotes better nutrient delivery to tissues.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1 class="mb-3">Our Services</h1>
+      <p class="lead">Discover our range of professional massage therapy services designed to meet your wellness needs.</p>
     </div>
   </div>
-</div>
 
-<div class="row mb-5">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h2 class="card-title h4 text-center mb-4">Frequently Asked Questions</h2>
-        <div class="accordion" id="faqAccordion">
-          <div class="accordion-item">
-            <h3 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
-                What should I expect during my first massage?
-              </button>
-            </h3>
-            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                During your first visit, you'll complete a brief health history form. Your massage therapist will discuss your goals and any areas of concern. You'll then be left to undress to your comfort level and lie on the massage table under the sheet. The therapist will knock before re-entering, and only the area being worked on will be uncovered.
+  <div class="row g-4">
+    <% if (services && services.length > 0) { %>
+      <% services.forEach(service => { %>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="card h-100 shadow-sm">
+            <% if (service.imageUrl) { %>
+              <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" loading="lazy">
+            <% } %>
+            <div class="card-body">
+              <h2 class="card-title h4"><%= service.name %></h2>
+              <div class="d-flex justify-content-between mb-3">
+                <span class="badge bg-primary rounded-pill"><%= service.duration %> minutes</span>
+                <span class="text-primary fw-bold">$<%= service.price %></span>
+              </div>
+              <p class="card-text"><%= service.description %></p>
+              <div class="d-grid mt-auto">
+                <a href="/booking?service=<%= service.id %>" class="btn btn-outline-primary">Book This Service</a>
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h3 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
-                How often should I get a massage?
-              </button>
-            </h3>
-            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                The frequency depends on your individual needs and goals. For general wellness and stress management, once a month is common. For addressing specific issues or chronic pain, weekly or bi-weekly sessions may be recommended. Your therapist can help determine the best schedule for you.
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="col-12 text-center">
+        <div class="alert alert-info">
+          <p class="mb-0">No services available at the moment. Please check back later.</p>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="row my-5">
+    <div class="col-md-12">
+      <div class="card bg-light shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="card-title h4 text-center mb-4">Massage Benefits</h2>
+          <div class="row g-4">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+              <div class="text-center">
+                <i class="bi bi-heart fs-1 text-primary mb-3"></i>
+                <h3 class="h5">Stress Reduction</h3>
+                <p>Massage therapy helps reduce stress hormones and promotes relaxation.</p>
               </div>
             </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="faq-3">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-3" aria-expanded="false" aria-controls="faq-collapse-3">
-                What's the difference between the massage types?
-              </button>
-            </h2>
-            <div id="faq-collapse-3" class="accordion-collapse collapse" aria-labelledby="faq-3" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Foot massage focuses on relieving tension through the feet's pressure points. Body massage provides full-body relaxation and tension relief. Combo massage offers the best of both worlds with a foot massage followed by a body massage. The duration you choose depends on your needs and time availability. Our therapists can recommend the best option for you.
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+              <div class="text-center">
+                <i class="bi bi-activity fs-1 text-primary mb-3"></i>
+                <h3 class="h5">Pain Relief</h3>
+                <p>Regular massages can help alleviate chronic pain and muscle tension.</p>
               </div>
             </div>
-          </div>
-          <div class="accordion-item">
-            <h3 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
-                Should I avoid eating before a massage?
-              </button>
-            </h3>
-            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                It's best not to eat a heavy meal right before your massage, but you shouldn't arrive hungry either. A light meal or snack 1-2 hours before your appointment is ideal. Stay hydrated by drinking water before and after your session.
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+              <div class="text-center">
+                <i class="bi bi-droplet fs-1 text-primary mb-3"></i>
+                <h3 class="h5">Improved Circulation</h3>
+                <p>Massage enhances blood flow and promotes better circulation throughout the body.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="card-title h4 text-center mb-4">Frequently Asked Questions</h2>
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faq1">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                  How often should I get a massage?
+                </button>
+              </h2>
+              <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  The frequency of massage sessions depends on your individual needs and goals. For general wellness and stress management, a monthly massage is often beneficial. For specific conditions or during periods of high stress, weekly sessions might be more appropriate. Your massage therapist can recommend a schedule that's right for you.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faq2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                  What should I expect during my first massage?
+                </button>
+              </h2>
+              <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  During your first visit, you'll complete a brief health history form. Your massage therapist will discuss your goals and any areas of concern. You'll be given privacy to undress to your comfort level and lie on the massage table under a sheet or towel. The therapist will knock before re-entering. Throughout the massage, the therapist will check in about pressure and comfort. Only the area being worked on will be uncovered.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faq3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                  Should I tip my massage therapist?
+                </button>
+              </h2>
+              <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Tipping is always appreciated but not required. If you choose to tip, 15-20% of the service price is customary, similar to other service industries. Some clients prefer to tip in cash even when paying for the service by card.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-12 text-center">
+      <h3>Ready to experience the benefits of massage therapy?</h3>
+      <p class="mb-4">Book your appointment today and take the first step towards relaxation and wellness.</p>
+      <a href="/booking" class="btn btn-primary btn-lg">Book Your Appointment</a>
     </div>
   </div>
 </div>

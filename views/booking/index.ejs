@@ -23,8 +23,8 @@
   <% } %>
 
   <div class="row">
-    <div class="col-md-8">
-      <div class="card shadow-custom">
+    <div class="col-lg-8 col-md-12">
+      <div class="card shadow-sm mb-4">
         <div class="card-body">
           <form id="bookingForm" action="/booking" method="POST" class="needs-validation" novalidate>
             <div class="mb-3">
@@ -35,33 +35,37 @@
               </div>
             </div>
             
-            <div class="mb-3">
-              <label for="email" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="email" name="email">
-              <div class="invalid-feedback">
-                Please provide a valid email address.
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email">
+                <div class="invalid-feedback">
+                  Please provide a valid email address.
+                </div>
+                <small class="form-text text-muted">Either email or phone is required.</small>
               </div>
-              <small class="form-text text-muted">Either email or phone number is required.</small>
+              
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone">
+                <div class="invalid-feedback">
+                  Please provide your phone number.
+                </div>
+                <small class="form-text text-muted">Either email or phone is required.</small>
+              </div>
             </div>
             
-            <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="phone" name="phone">
-              <div class="invalid-feedback">
-                Please provide your phone number.
-              </div>
-              <small class="form-text text-muted">Either email or phone number is required.</small>
-            </div>
-            
-            <div class="mb-3">
+            <div class="mb-4">
               <label for="serviceId" class="form-label">Select Service *</label>
-              <div class="row mb-3" id="serviceCards">
+              <div class="row g-3" id="serviceCards">
                 <% if (services && services.length > 0) { %>
                   <% services.forEach(service => { %>
-                    <div class="col-md-6 mb-3">
-                      <div class="card service-card h-100" data-service-id="<%= service.id %>" style="cursor: pointer;">
+                    <div class="col-md-6 col-sm-12">
+                      <div class="card service-card h-100" data-service-id="<%= service.id %>">
                         <% if (service.imageUrl) { %>
-                          <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" style="height: 150px; object-fit: cover;">
+                          <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" loading="lazy">
+                        <% } else { %>
+                          <div class="card-img-top bg-secondary" style="height: 150px;"></div>
                         <% } %>
                         <div class="card-body">
                           <h5 class="card-title"><%= service.name %></h5>
@@ -91,36 +95,40 @@
               </div>
             </div>
             
-            <div class="mb-3">
-              <label for="date" class="form-label">Select Date *</label>
-              <input type="date" class="form-control" id="date" name="date" required>
-              <div class="invalid-feedback">
-                Please select a date.
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="time" class="form-label">Select Time *</label>
-              <select class="form-select" id="time" name="time" required disabled>
-                <option value="">-- Select Date and Service First --</option>
-              </select>
-              <div id="timeLoading" class="d-none mt-2">
-                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="date" class="form-label">Select Date *</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+                <div class="invalid-feedback">
+                  Please select a date.
                 </div>
-                <span class="ms-2">Loading available time slots...</span>
               </div>
-              <div class="invalid-feedback">
-                Please select a time slot.
+              
+              <div class="col-md-6 mb-3">
+                <label for="time" class="form-label">Select Time *</label>
+                <div class="d-flex align-items-center">
+                  <select class="form-select" id="time" name="time" required disabled>
+                    <option value="">-- Select a Time --</option>
+                  </select>
+                  <div id="timeLoading" class="ms-2 d-none">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="invalid-feedback">
+                  Please select a time.
+                </div>
+                <small class="form-text text-muted" id="timeHelp">Please select a date and service first.</small>
               </div>
             </div>
             
             <div class="mb-3">
-              <label for="notes" class="form-label">Special Requests or Notes</label>
+              <label for="notes" class="form-label">Special Requests (Optional)</label>
               <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
             </div>
             
-            <div class="d-grid">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <button type="submit" class="btn btn-primary btn-lg">Book Appointment</button>
             </div>
           </form>
@@ -128,45 +136,27 @@
       </div>
     </div>
     
-    <div class="col-md-4">
-      <div class="card shadow-custom mb-4">
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Business Hours</h5>
+          <h5 class="card-title mb-0">Booking Summary</h5>
         </div>
         <div class="card-body">
-          <ul class="list-group list-group-flush business-hours-table">
-            <% 
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            if (businessHours && businessHours.length > 0) { 
-              businessHours.forEach(hours => { 
-            %>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <%= days[hours.dayOfWeek] %>
-                <% if (hours.isActive) { %>
-                  <span><%= hours.openTime.substring(0, 5) %> - <%= hours.closeTime.substring(0, 5) %></span>
-                <% } else { %>
-                  <span class="closed">Closed</span>
-                <% } %>
-              </li>
-            <% }); } else { %>
-              <li class="list-group-item">Business hours not available</li>
-            <% } %>
-          </ul>
+          <div id="bookingSummary">
+            <p class="text-muted">Please select a service, date, and time to see your booking summary.</p>
+          </div>
         </div>
       </div>
       
-      <div class="card shadow-custom">
+      <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Booking Information</h5>
+          <h5 class="card-title mb-0">Contact Information</h5>
         </div>
         <div class="card-body">
-          <p>Please note the following:</p>
-          <ul>
-            <li>Arrive 10 minutes before your appointment time.</li>
-            <li>Cancellations must be made at least 24 hours in advance.</li>
-            <li>Payment is due at the time of service.</li>
-            <li>We accept cash, credit cards, and mobile payments.</li>
-          </ul>
+          <p><i class="bi bi-geo-alt"></i> 12229 Voyager pkwy Northgate Village Unit 160, Colorado Springs, CO 80921</p>
+          <p><i class="bi bi-telephone"></i> 7199309548</p>
+          <p><i class="bi bi-envelope"></i> yilinzhang1969@gmail.com</p>
+          <p><i class="bi bi-clock"></i> Mon-Fri: 9am-7pm, Sat & Sun: 10am-5pm</p>
         </div>
       </div>
     </div>
@@ -176,17 +166,31 @@
 <style>
   .service-card {
     transition: all 0.3s ease;
-    border: 2px solid #dee2e6;
+    border: 2px solid transparent;
   }
   
   .service-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
   
   .service-card.selected {
-    border-color: #0d6efd !important;
-    border-width: 3px !important;
+    border-color: var(--primary-color);
+    background-color: rgba(78, 115, 223, 0.05);
+  }
+  
+  @media (max-width: 768px) {
+    .service-card {
+      margin-bottom: 15px;
+    }
+    
+    .card-title {
+      font-size: 1.1rem;
+    }
+    
+    .badge {
+      font-size: 0.7rem;
+    }
   }
 </style>
 
@@ -197,27 +201,21 @@
     const serviceSelect = document.getElementById('serviceId');
     const serviceCards = document.querySelectorAll('.service-card');
     const timeLoading = document.getElementById('timeLoading');
+    const timeHelp = document.getElementById('timeHelp');
+    const bookingSummary = document.getElementById('bookingSummary');
     
     // Set minimum date to today
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
-    dateInput.min = `${yyyy}-${mm}-${dd}`;
-    dateInput.value = `${yyyy}-${mm}-${dd}`;
+    const formattedToday = `${yyyy}-${mm}-${dd}`;
+    dateInput.setAttribute('min', formattedToday);
     
-    // Set maximum date to 3 months from now
-    const maxDate = new Date();
-    maxDate.setMonth(maxDate.getMonth() + 3);
-    const maxYyyy = maxDate.getFullYear();
-    const maxMm = String(maxDate.getMonth() + 1).padStart(2, '0');
-    const maxDd = String(maxDate.getDate()).padStart(2, '0');
-    dateInput.max = `${maxYyyy}-${maxMm}-${maxDd}`;
-    
-    // Service card selection
+    // Handle service card selection
     serviceCards.forEach(card => {
       card.addEventListener('click', function() {
-        const serviceId = this.getAttribute('data-service-id');
+        const serviceId = this.dataset.serviceId;
         
         // Remove selected class from all cards
         serviceCards.forEach(c => c.classList.remove('selected'));
@@ -225,96 +223,116 @@
         // Add selected class to clicked card
         this.classList.add('selected');
         
-        // Update the hidden select
+        // Update hidden select
         serviceSelect.value = serviceId;
         
         // Trigger change event on select
         const event = new Event('change');
         serviceSelect.dispatchEvent(event);
         
-        // Check if date is selected and update time slots
+        // Check if date is selected and fetch available times
         if (dateInput.value) {
-          updateAvailableTimes();
+          fetchAvailableTimes();
         }
       });
     });
     
-    // Function to fetch available time slots
-    async function updateAvailableTimes() {
-      const date = dateInput.value;
+    // Handle date selection
+    dateInput.addEventListener('change', function() {
+      if (serviceSelect.value) {
+        fetchAvailableTimes();
+      }
+    });
+    
+    // Handle service selection
+    serviceSelect.addEventListener('change', function() {
+      if (dateInput.value) {
+        fetchAvailableTimes();
+      }
+    });
+    
+    // Handle time selection
+    timeSelect.addEventListener('change', function() {
+      updateBookingSummary();
+    });
+    
+    // Fetch available times based on selected service and date
+    function fetchAvailableTimes() {
       const serviceId = serviceSelect.value;
+      const date = dateInput.value;
       
-      if (!date || !serviceId) {
-        timeSelect.innerHTML = '<option value="">-- Select Date and Service First --</option>';
-        timeSelect.disabled = true;
+      if (!serviceId || !date) {
         return;
       }
       
-      // Show loading indicator
+      // Show loading spinner
       timeLoading.classList.remove('d-none');
       timeSelect.disabled = true;
+      timeHelp.textContent = 'Loading available times...';
       
-      try {
-        const response = await fetch(`/api/available-times?date=${date}&serviceId=${serviceId}`);
-        const data = await response.json();
-        
-        // Clear existing options
-        timeSelect.innerHTML = '';
-        
-        if (data.availableTimes && data.availableTimes.length > 0) {
-          // Add default option
-          const defaultOption = document.createElement('option');
-          defaultOption.value = '';
-          defaultOption.textContent = '-- Select a Time --';
-          timeSelect.appendChild(defaultOption);
-          
-          // Add available time options
-          data.availableTimes.forEach(time => {
-            const option = document.createElement('option');
-            option.value = time.value;
-            option.textContent = time.display;
-            timeSelect.appendChild(option);
-          });
-          
-          timeSelect.disabled = false;
-        } else {
-          // No available times
-          const noTimesOption = document.createElement('option');
-          noTimesOption.value = '';
-          noTimesOption.textContent = 'No available times for this date';
-          timeSelect.appendChild(noTimesOption);
-          timeSelect.disabled = true;
-        }
-      } catch (error) {
-        console.error('Error fetching available times:', error);
-        timeSelect.innerHTML = '<option value="">Error loading times. Please try again.</option>';
-      } finally {
-        // Hide loading indicator
-        timeLoading.classList.add('d-none');
+      // Clear existing options except the first one
+      while (timeSelect.options.length > 1) {
+        timeSelect.remove(1);
       }
+      
+      // Fetch available times from API
+      fetch(`/api/available-times?serviceId=${serviceId}&date=${date}`)
+        .then(response => response.json())
+        .then(data => {
+          // Hide loading spinner
+          timeLoading.classList.add('d-none');
+          
+          if (data.availableTimes && data.availableTimes.length > 0) {
+            // Add available times as options
+            data.availableTimes.forEach(time => {
+              const option = document.createElement('option');
+              option.value = time.value;
+              option.textContent = time.display;
+              timeSelect.appendChild(option);
+            });
+            
+            // Enable time select
+            timeSelect.disabled = false;
+            timeHelp.textContent = 'Please select an available time.';
+          } else {
+            // No available times
+            timeHelp.textContent = 'No available times for the selected date. Please choose another date.';
+            timeSelect.disabled = true;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching available times:', error);
+          timeLoading.classList.add('d-none');
+          timeHelp.textContent = 'Error loading times. Please try again.';
+          timeSelect.disabled = true;
+        });
     }
     
-    // Event listeners
-    dateInput.addEventListener('change', updateAvailableTimes);
-    serviceSelect.addEventListener('change', updateAvailableTimes);
-    
-    // Check if URL has service parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const serviceParam = urlParams.get('service');
-    if (serviceParam) {
-      serviceSelect.value = serviceParam;
+    // Update booking summary
+    function updateBookingSummary() {
+      const serviceId = serviceSelect.value;
+      const date = dateInput.value;
+      const time = timeSelect.value;
       
-      // Also select the corresponding card
-      const selectedCard = document.querySelector(`.service-card[data-service-id="${serviceParam}"]`);
-      if (selectedCard) {
-        selectedCard.classList.add('selected');
+      if (!serviceId || !date || !time) {
+        bookingSummary.innerHTML = '<p class="text-muted">Please select a service, date, and time to see your booking summary.</p>';
+        return;
       }
       
-      // If we have a service pre-selected and date is already set to today by default,
-      // trigger the time slot fetch
-      if (dateInput.value) {
-        updateAvailableTimes();
-      }
+      const selectedService = serviceSelect.options[serviceSelect.selectedIndex].text;
+      const formattedDate = new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const selectedTimeText = timeSelect.options[timeSelect.selectedIndex].text;
+      
+      bookingSummary.innerHTML = `
+        <h6 class="fw-bold">Service:</h6>
+        <p>${selectedService}</p>
+        <h6 class="fw-bold">Date:</h6>
+        <p>${formattedDate}</p>
+        <h6 class="fw-bold">Time:</h6>
+        <p>${selectedTimeText}</p>
+        <hr>
+        <p class="text-end mb-0"><strong>Total:</strong> $${selectedService.match(/\$(\d+)/)[1]}</p>
+      `;
     }
     
     // Form validation
@@ -323,6 +341,15 @@
       if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
+      }
+      
+      // Check if either email or phone is provided
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      
+      if (!email && !phone) {
+        event.preventDefault();
+        alert('Please provide either an email address or phone number.');
       }
       
       form.classList.add('was-validated');

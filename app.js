@@ -53,16 +53,27 @@ app.use((req, res, next) => {
   
   // Add business address for global use
   res.locals.businessAddress = {
-    street: "12229 Voyager Pkwy #160",
+    street: "12229 Voyager pkwy Northgate Village Unit 160",
     city: "Colorado Springs",
     state: "CO",
     zip: "80921",
-    full: "12229 Voyager Pkwy #160, Colorado Springs, CO 80921"
+    full: "12229 Voyager pkwy Northgate Village Unit 160, Colorado Springs, CO 80921"
   };
   
   // Add business contact information for global use
-  res.locals.businessPhone = "(719) 930-9548";
+  res.locals.businessPhone = "7199309548";
   res.locals.businessEmail = "yilinzhang1969@gmail.com";
+  
+  // Add business hours for global use
+  res.locals.businessHours = {
+    monday: "9am-7pm",
+    tuesday: "9am-7pm",
+    wednesday: "9am-7pm",
+    thursday: "9am-7pm",
+    friday: "9am-7pm",
+    saturday: "10am-5pm",
+    sunday: "10am-5pm"
+  };
   
   // Add active path for navigation highlighting
   res.locals.path = req.path;

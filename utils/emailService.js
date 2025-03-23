@@ -96,9 +96,8 @@ async function sendBookingConfirmation(booking, user, service) {
         <div style="margin-bottom: 20px;">
           <h3 style="color: #4a6da7;">Appointment Location</h3>
           <p>Quality Massage LLC</p>
-          <p>123 Relaxation Ave</p>
-          <p>Denver, CO 80202</p>
-          <p>Phone: (719) 930-9548</p>
+          <p>12229 Voyager pkwy Northgate Village Unit 160, Colorado Springs, CO 80921</p>
+          <p>Phone: 7199309548</p>
         </div>
         
         <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
@@ -108,7 +107,7 @@ async function sendBookingConfirmation(booking, user, service) {
         </div>
         
         <div style="margin-top: 20px; text-align: center; color: #777; font-size: 12px;">
-          <p>If you have any questions or need to reschedule, please call us at (719) 930-9548.</p>
+          <p>If you have any questions or need to reschedule, please call us at 7199309548.</p>
           <p>&copy; ${new Date().getFullYear()} Quality Massage LLC. All rights reserved.</p>
         </div>
       </div>

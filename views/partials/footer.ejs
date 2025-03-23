@@ -1,39 +1,47 @@
   </div><!-- End of container -->
 
-  <footer class="bg-dark text-white mt-5 py-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <h5><%= businessName %></h5>
-          <p>Your wellness journey starts here. Book your massage therapy session today.</p>
-        </div>
-        <div class="col-md-4">
-          <h5>Quick Links</h5>
-          <ul class="list-unstyled">
-            <li><a href="/" class="text-white">Home</a></li>
-            <li><a href="/services" class="text-white">Services</a></li>
-            <li><a href="/booking" class="text-white">Book Now</a></li>
-            <li><a href="/about" class="text-white">About</a></li>
-            <li><a href="/contact" class="text-white">Contact</a></li>
-          </ul>
-        </div>
-        <div class="col-md-4">
-          <h5>Contact Us</h5>
-          <address>
-            <p><%= businessAddress.street %><br><%= businessAddress.city %>, <%= businessAddress.state %> <%= businessAddress.zip %></p>
-            <p>Email: <%= businessEmail %><br>Phone: <%= businessPhone %></p>
-          </address>
-        </div>
+<footer class="bg-dark text-white mt-5 py-4">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+        <h5><%= businessName %></h5>
+        <p>Your wellness journey starts here. Book your massage therapy session today.</p>
       </div>
-      <div class="row mt-3">
-        <div class="col-12 text-center">
-          <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= businessName %>. All rights reserved.</p>
-        </div>
+      <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled footer-links">
+          <li class="mb-2"><a href="/" class="text-white text-decoration-none">Home</a></li>
+          <li class="mb-2"><a href="/services" class="text-white text-decoration-none">Services</a></li>
+          <li class="mb-2"><a href="/booking" class="text-white text-decoration-none">Book Now</a></li>
+          <li class="mb-2"><a href="/about" class="text-white text-decoration-none">About</a></li>
+          <li class="mb-2"><a href="/contact" class="text-white text-decoration-none">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+        <h5>Business Hours</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2">Monday - Friday: 9am-7pm</li>
+          <li class="mb-2">Saturday: 10am-5pm</li>
+          <li class="mb-2">Sunday: 10am-5pm</li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <h5>Contact Us</h5>
+        <address class="mb-0">
+          <p class="mb-2"><%= businessAddress.street %><br><%= businessAddress.city %>, <%= businessAddress.state %> <%= businessAddress.zip %></p>
+          <p class="mb-0">Email: <a href="mailto:<%= businessEmail %>" class="text-white"><%= businessEmail %></a><br>Phone: <a href="tel:<%= businessPhone %>" class="text-white"><%= businessPhone %></a></p>
+        </address>
       </div>
     </div>
-  </footer>
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= businessName %>. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>

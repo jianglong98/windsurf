@@ -2,11 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %> | <%= businessName %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Book your massage appointment at <%= businessName %> - Professional massage services in Colorado Springs. Open 7 days a week with skilled therapists.">
+  <meta name="keywords" content="massage, Colorado Springs, body massage, foot massage, relaxation, therapeutic massage, spa, wellness">
+  <meta name="author" content="<%= businessName %>">
+  <meta name="theme-color" content="#4e73df">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= locals.fullUrl || 'https://example.com' %>">
+  <meta property="og:title" content="<%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs">
+  <meta property="og:description" content="Professional massage services in Colorado Springs. Open Mon-Fri 9am-7pm, Sat-Sun 10am-5pm. Book your appointment today!">
+  <meta property="og:image" content="/img/og-image.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="<%= locals.fullUrl || 'https://example.com' %>">
+  <meta property="twitter:title" content="<%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs">
+  <meta property="twitter:description" content="Professional massage services in Colorado Springs. Open Mon-Fri 9am-7pm, Sat-Sun 10am-5pm. Book your appointment today!">
+  <meta property="twitter:image" content="/img/og-image.jpg">
+  
+  <!-- Google Ads optimization -->
+  <meta name="google-site-verification" content="your-verification-code">
+  
+  <!-- Structured data for local business -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "<%= businessName %>",
+    "image": "/img/logo.png",
+    "url": "<%= locals.fullUrl || 'https://example.com' %>",
+    "telephone": "<%= businessPhone %>",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "<%= businessAddress.street %>",
+      "addressLocality": "<%= businessAddress.city %>",
+      "addressRegion": "<%= businessAddress.state %>",
+      "postalCode": "<%= businessAddress.zip %>",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 38.8339,
+      "longitude": -104.8214
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Saturday", "Sunday"],
+        "opens": "10:00",
+        "closes": "17:00"
+      }
+    ],
+    "priceRange": "$$"
+  }
+  </script>
+  
+  <title><%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
