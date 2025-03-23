@@ -43,9 +43,15 @@ async function initializeTransporter() {
  * @param {Object} booking - The booking object with all details
  * @param {Object} user - The user who made the booking
  * @param {Object} service - The service that was booked
- * @returns {Promise} - Promise with the email send info
+ * @returns {Promise|null} - Promise with the email send info or null if no email address
  */
 async function sendBookingConfirmation(booking, user, service) {
+  // Check if user has an email address
+  if (!user.email) {
+    console.log('No email address provided for user. Skipping email notification.');
+    return null;
+  }
+  
   if (!transporter) {
     await initializeTransporter();
   }
@@ -101,17 +107,16 @@ async function sendBookingConfirmation(booking, user, service) {
           <p><strong>Late Arrival:</strong> If you arrive late, your session may be shortened to accommodate other scheduled appointments.</p>
         </div>
         
-        <div style="text-align: center; margin-top: 30px; color: #777; font-size: 14px;">
-          <p>Thank you for choosing Quality Massage LLC!</p>
-          <p>If you have any questions, please contact us at (719) 930-9548 or reply to this email.</p>
+        <div style="margin-top: 20px; text-align: center; color: #777; font-size: 12px;">
+          <p>If you have any questions or need to reschedule, please call us at (719) 930-9548.</p>
+          <p>&copy; ${new Date().getFullYear()} Quality Massage LLC. All rights reserved.</p>
         </div>
       </div>
     `
   };
   
-  // Send the email
+  // Send email
   const info = await transporter.sendMail(mailOptions);
-  
   console.log('Booking confirmation email sent to:', user.email);
   console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
   

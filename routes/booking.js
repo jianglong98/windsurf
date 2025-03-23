@@ -86,8 +86,14 @@ router.post('/', async (req, res) => {
     const { name, email, phone, date, time, serviceId, notes } = req.body;
     
     // Validate required fields
-    if (!name || !email || !date || !time || !serviceId) {
+    if (!name || !date || !time || !serviceId) {
       req.session.error_msg = 'Please fill in all required fields';
+      return res.redirect('/booking');
+    }
+    
+    // Validate that either email or phone is provided
+    if (!email && !phone) {
+      req.session.error_msg = 'Please provide either an email address or a phone number';
       return res.redirect('/booking');
     }
     
@@ -99,9 +105,18 @@ router.post('/', async (req, res) => {
     }
     
     // Find or create user
-    let user = await User.findOne({ where: { email } });
+    let user;
+    
+    if (email) {
+      // If email is provided, try to find user by email
+      user = await User.findOne({ where: { email } });
+    } else if (phone) {
+      // If only phone is provided, try to find user by phone
+      user = await User.findOne({ where: { phone } });
+    }
     
     if (!user) {
+      // Create new user
       user = await User.create({
         name,
         email,
@@ -109,7 +124,7 @@ router.post('/', async (req, res) => {
       }, { transaction: t });
     } else {
       // Update user information if needed
-      await user.update({ name, phone }, { transaction: t });
+      await user.update({ name, email, phone }, { transaction: t });
     }
     
     // Create booking

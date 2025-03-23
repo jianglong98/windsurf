@@ -217,16 +217,27 @@ router.post('/bookings/:id/status', isAdmin, async (req, res) => {
       try {
         // For testing purposes, override the email to the test email
         const testEmail = 'rcsiot123456@gmail.com';
-        const userWithTestEmail = { ...booking.User.dataValues, email: testEmail };
         
-        const emailResult = await emailService.sendBookingConfirmation(
-          booking,
-          userWithTestEmail,
-          booking.Service
-        );
-        
-        console.log('Confirmation email sent:', emailResult);
-        req.session.success_msg = `Booking confirmed and notification email sent to ${testEmail}`;
+        // Check if user has an email address (either original or test)
+        if (!booking.User.email && !testEmail) {
+          console.log('No email address available for user. Skipping email notification.');
+          req.session.success_msg = `Booking status updated to ${status}. No email sent as customer has no email address.`;
+        } else {
+          const userWithTestEmail = { ...booking.User.dataValues, email: testEmail };
+          
+          const emailResult = await emailService.sendBookingConfirmation(
+            booking,
+            userWithTestEmail,
+            booking.Service
+          );
+          
+          if (emailResult) {
+            console.log('Confirmation email sent:', emailResult);
+            req.session.success_msg = `Booking confirmed and notification email sent to ${testEmail}`;
+          } else {
+            req.session.success_msg = `Booking status updated to ${status}. No email notification sent.`;
+          }
+        }
       } catch (emailError) {
         console.error('Failed to send confirmation email:', emailError);
         req.session.success_msg = `Booking status updated to ${status}, but failed to send email notification`;

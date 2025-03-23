@@ -14,10 +14,16 @@ module.exports = (sequelize) => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
       validate: {
-        isEmail: true
+        isEmail: true,
+        customValidator(value) {
+          // If email is empty, ensure phone is provided
+          if (!value && !this.phone) {
+            throw new Error('Either email or phone must be provided');
+          }
+        }
       }
     },
     password: {
@@ -26,7 +32,15 @@ module.exports = (sequelize) => {
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        customValidator(value) {
+          // If phone is empty, ensure email is provided
+          if (!value && !this.email) {
+            throw new Error('Either email or phone must be provided');
+          }
+        }
+      }
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
