@@ -56,45 +56,52 @@ async function seed() {
     console.log('Creating massage services...');
     const services = await Service.bulkCreate([
       {
-        name: 'Swedish Massage',
-        description: 'A gentle form of massage that uses long strokes, kneading, deep circular movements, vibration and tapping to help relax and energize you.',
-        duration: 60,
-        price: 75,
+        name: 'Foot Massage - 30 minutes',
+        description: 'A relaxing 30-minute foot massage that relieves tension and promotes relaxation through targeted pressure points.',
+        duration: 30,
+        price: 30,
         isActive: true
       },
       {
-        name: 'Deep Tissue Massage',
-        description: 'A massage technique that focuses on the deeper layers of muscle tissue. It aims to release the chronic patterns of tension in the body through slow strokes and deep finger pressure.',
+        name: 'Foot Massage - 60 minutes',
+        description: 'An extended 60-minute foot massage that provides deep relaxation and stress relief through comprehensive foot therapy.',
         duration: 60,
-        price: 90,
+        price: 55,
         isActive: true
       },
       {
-        name: 'Hot Stone Massage',
-        description: 'A specialty massage where the therapist uses smooth, heated stones as an extension of their own hands, or by placing them on the body while they massage other parts of the body.',
+        name: 'Combo Massage - 30 min foot + 30 min body',
+        description: 'A balanced combination of 30 minutes foot massage followed by 30 minutes of body massage for complete relaxation.',
+        duration: 60,
+        price: 60,
+        isActive: true
+      },
+      {
+        name: 'Combo Massage - 30 min foot + 60 min body',
+        description: 'A comprehensive treatment with 30 minutes of foot massage followed by 60 minutes of full body massage for ultimate relaxation.',
         duration: 90,
-        price: 110,
-        isActive: true
-      },
-      {
-        name: 'Sports Massage',
-        description: 'A massage designed to assist in correcting problems and imbalances in soft tissue that are caused from repetitive and strenuous physical activity and trauma.',
-        duration: 60,
         price: 85,
         isActive: true
       },
       {
-        name: 'Prenatal Massage',
-        description: 'A therapeutic bodywork that focuses on the special needs of the mother-to-be as her body goes through the dramatic changes of pregnancy.',
-        duration: 60,
-        price: 80,
+        name: 'Body Massage - 30 minutes',
+        description: 'A focused 30-minute full body massage targeting key areas of tension to provide quick relief.',
+        duration: 30,
+        price: 40,
         isActive: true
       },
       {
-        name: 'Aromatherapy Massage',
-        description: 'A massage therapy that uses essential oils derived from plants to affect your mood and alleviate pain.',
-        duration: 75,
-        price: 95,
+        name: 'Body Massage - 60 minutes',
+        description: 'A complete 60-minute full body massage that helps reduce stress, relieve muscle tension and promote overall wellness.',
+        duration: 60,
+        price: 65,
+        isActive: true
+      },
+      {
+        name: 'Body Massage - 90 minutes',
+        description: 'An extended 90-minute full body massage providing deep relaxation and comprehensive treatment for the entire body.',
+        duration: 90,
+        price: 90,
         isActive: true
       }
     ]);

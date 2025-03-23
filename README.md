@@ -9,6 +9,21 @@ This project is a massage booking website built with Node.js, Express, EJS templ
 - **Phone**: (719) 930-9548
 - **Email**: yilinzhang1969@gmail.com
 
+## Services
+
+### FOOT MASSAGE
+- 30 minutes .............................. $30.00
+- 60 minutes .............................. $55.00
+
+### COMBO MASSAGE
+- 30 minutes foot 30 minutes body ....... $60.00
+- 30 minutes foot 60 minutes body ....... $85.00
+
+### BODY MASSAGE
+- 30 minutes full body massage .......... $40.00
+- 60 minutes full body massage .......... $65.00
+- 90 minutes full body massage .......... $90.00
+
 ## Features
 
 ### User Features
