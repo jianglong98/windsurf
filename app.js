@@ -74,6 +74,7 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/booking', require('./routes/booking'));
 app.use('/admin', require('./routes/admin'));
+app.use('/api', require('./routes/api'));
 
 // Error handling middleware
 app.use((req, res, next) => {

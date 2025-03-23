@@ -308,7 +308,7 @@ router.get('/services', isAdmin, async (req, res) => {
 // Add new service
 router.post('/services', isAdmin, async (req, res) => {
   try {
-    const { name, description, duration, price, isActive } = req.body;
+    const { name, description, duration, price, isActive, imageUrl } = req.body;
     
     // Validate input
     if (!name || !duration || !price) {
@@ -319,6 +319,7 @@ router.post('/services', isAdmin, async (req, res) => {
     await Service.create({
       name,
       description,
+      imageUrl,
       duration: parseInt(duration, 10),
       price: parseFloat(price),
       isActive: isActive === 'on'
@@ -337,7 +338,7 @@ router.post('/services', isAdmin, async (req, res) => {
 router.post('/services/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, duration, price, isActive } = req.body;
+    const { name, description, duration, price, isActive, imageUrl } = req.body;
     
     // Validate input
     if (!name || !duration || !price) {
@@ -352,13 +353,14 @@ router.post('/services/:id', isAdmin, async (req, res) => {
       return res.redirect('/admin/services');
     }
     
-    await service.update({
-      name,
-      description,
-      duration: parseInt(duration, 10),
-      price: parseFloat(price),
-      isActive: isActive === 'on'
-    });
+    service.name = name;
+    service.description = description;
+    service.imageUrl = imageUrl;
+    service.duration = parseInt(duration, 10);
+    service.price = parseFloat(price);
+    service.isActive = isActive === 'on';
+    
+    await service.save();
     
     req.session.success_msg = 'Service updated successfully';
     res.redirect('/admin/services');

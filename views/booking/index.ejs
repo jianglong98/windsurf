@@ -55,7 +55,28 @@
             
             <div class="mb-3">
               <label for="serviceId" class="form-label">Select Service *</label>
-              <select class="form-select" id="serviceId" name="serviceId" required>
+              <div class="row mb-3" id="serviceCards">
+                <% if (services && services.length > 0) { %>
+                  <% services.forEach(service => { %>
+                    <div class="col-md-6 mb-3">
+                      <div class="card service-card h-100" data-service-id="<%= service.id %>" style="cursor: pointer;">
+                        <% if (service.imageUrl) { %>
+                          <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" style="height: 150px; object-fit: cover;">
+                        <% } %>
+                        <div class="card-body">
+                          <h5 class="card-title"><%= service.name %></h5>
+                          <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-primary rounded-pill"><%= service.duration %> min</span>
+                            <span class="text-primary fw-bold">$<%= service.price %></span>
+                          </div>
+                          <p class="card-text small"><%= service.description ? service.description.substring(0, 100) + (service.description.length > 100 ? '...' : '') : '' %></p>
+                        </div>
+                      </div>
+                    </div>
+                  <% }) %>
+                <% } %>
+              </div>
+              <select class="form-select d-none" id="serviceId" name="serviceId" required>
                 <option value="">-- Select a Service --</option>
                 <% if (services && services.length > 0) { %>
                   <% services.forEach(service => { %>
@@ -152,11 +173,29 @@
   </div>
 </div>
 
+<style>
+  .service-card {
+    transition: all 0.3s ease;
+    border: 2px solid #dee2e6;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .service-card.selected {
+    border-color: #0d6efd !important;
+    border-width: 3px !important;
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const dateInput = document.getElementById('date');
-    const serviceSelect = document.getElementById('serviceId');
     const timeSelect = document.getElementById('time');
+    const serviceSelect = document.getElementById('serviceId');
+    const serviceCards = document.querySelectorAll('.service-card');
     const timeLoading = document.getElementById('timeLoading');
     
     // Set minimum date to today
@@ -165,6 +204,7 @@
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     dateInput.min = `${yyyy}-${mm}-${dd}`;
+    dateInput.value = `${yyyy}-${mm}-${dd}`;
     
     // Set maximum date to 3 months from now
     const maxDate = new Date();
@@ -174,8 +214,33 @@
     const maxDd = String(maxDate.getDate()).padStart(2, '0');
     dateInput.max = `${maxYyyy}-${maxMm}-${maxDd}`;
     
+    // Service card selection
+    serviceCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const serviceId = this.getAttribute('data-service-id');
+        
+        // Remove selected class from all cards
+        serviceCards.forEach(c => c.classList.remove('selected'));
+        
+        // Add selected class to clicked card
+        this.classList.add('selected');
+        
+        // Update the hidden select
+        serviceSelect.value = serviceId;
+        
+        // Trigger change event on select
+        const event = new Event('change');
+        serviceSelect.dispatchEvent(event);
+        
+        // Check if date is selected and update time slots
+        if (dateInput.value) {
+          updateAvailableTimes();
+        }
+      });
+    });
+    
     // Function to fetch available time slots
-    async function fetchTimeSlots() {
+    async function updateAvailableTimes() {
       const date = dateInput.value;
       const serviceId = serviceSelect.value;
       
@@ -185,68 +250,92 @@
         return;
       }
       
-      timeSelect.disabled = true;
+      // Show loading indicator
       timeLoading.classList.remove('d-none');
+      timeSelect.disabled = true;
       
       try {
-        const response = await fetch(`/booking/available-slots?date=${date}&serviceId=${serviceId}`);
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        
+        const response = await fetch(`/api/available-times?date=${date}&serviceId=${serviceId}`);
         const data = await response.json();
         
+        // Clear existing options
         timeSelect.innerHTML = '';
         
-        if (data.success && data.slots.length > 0) {
-          timeSelect.innerHTML = '<option value="">-- Select a Time --</option>';
+        if (data.availableTimes && data.availableTimes.length > 0) {
+          // Add default option
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = '-- Select a Time --';
+          timeSelect.appendChild(defaultOption);
           
-          data.slots.forEach(slot => {
+          // Add available time options
+          data.availableTimes.forEach(time => {
             const option = document.createElement('option');
-            option.value = slot;
-            
-            // Format time for display (e.g., "14:30" to "2:30 PM")
-            const [hours, minutes] = slot.split(':');
-            const hour = parseInt(hours, 10);
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const displayHour = hour % 12 || 12;
-            
-            option.textContent = `${displayHour}:${minutes} ${ampm}`;
+            option.value = time.value;
+            option.textContent = time.display;
             timeSelect.appendChild(option);
           });
           
           timeSelect.disabled = false;
         } else {
-          timeSelect.innerHTML = '<option value="">No available slots for selected date</option>';
+          // No available times
+          const noTimesOption = document.createElement('option');
+          noTimesOption.value = '';
+          noTimesOption.textContent = 'No available times for this date';
+          timeSelect.appendChild(noTimesOption);
+          timeSelect.disabled = true;
         }
       } catch (error) {
-        console.error('Error fetching time slots:', error);
-        timeSelect.innerHTML = '<option value="">Error loading time slots</option>';
+        console.error('Error fetching available times:', error);
+        timeSelect.innerHTML = '<option value="">Error loading times. Please try again.</option>';
       } finally {
+        // Hide loading indicator
         timeLoading.classList.add('d-none');
       }
     }
     
     // Event listeners
-    dateInput.addEventListener('change', fetchTimeSlots);
-    serviceSelect.addEventListener('change', fetchTimeSlots);
+    dateInput.addEventListener('change', updateAvailableTimes);
+    serviceSelect.addEventListener('change', updateAvailableTimes);
     
     // Check if URL has service parameter
     const urlParams = new URLSearchParams(window.location.search);
     const serviceParam = urlParams.get('service');
-    
     if (serviceParam) {
-      const serviceOption = serviceSelect.querySelector(`option[value="${serviceParam}"]`);
-      if (serviceOption) {
-        serviceOption.selected = true;
-        // If we have a service pre-selected and date is already set to today by default,
-        // trigger the time slot fetch
-        if (dateInput.value) {
-          fetchTimeSlots();
-        }
+      serviceSelect.value = serviceParam;
+      
+      // Also select the corresponding card
+      const selectedCard = document.querySelector(`.service-card[data-service-id="${serviceParam}"]`);
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+      }
+      
+      // If we have a service pre-selected and date is already set to today by default,
+      // trigger the time slot fetch
+      if (dateInput.value) {
+        updateAvailableTimes();
       }
     }
+    
+    // Form validation
+    const form = document.getElementById('bookingForm');
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      form.classList.add('was-validated');
+    });
+    
+    // Auto dismiss alerts after 5 seconds
+    const autoDismissAlerts = document.querySelectorAll('.auto-dismiss');
+    autoDismissAlerts.forEach(alert => {
+      setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      }, 5000);
+    });
   });
 </script>
 

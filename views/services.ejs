@@ -12,6 +12,9 @@
     <% services.forEach(service => { %>
       <div class="col-md-6 mb-4">
         <div class="card h-100">
+          <% if (service.imageUrl) { %>
+            <img src="<%= service.imageUrl %>" class="card-img-top" alt="<%= service.name %>" style="height: 200px; object-fit: cover;">
+          <% } %>
           <div class="card-body">
             <h2 class="card-title h4"><%= service.name %></h2>
             <div class="d-flex justify-content-between mb-3">

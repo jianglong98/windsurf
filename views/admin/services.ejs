@@ -20,6 +20,7 @@
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Image</th>
                   <th>Duration</th>
                   <th>Price</th>
                   <th>Status</th>
@@ -30,6 +31,13 @@
                 <% services.forEach(service => { %>
                   <tr>
                     <td><%= service.name %></td>
+                    <td>
+                      <% if (service.imageUrl) { %>
+                        <img src="<%= service.imageUrl %>" alt="<%= service.name %>" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
+                      <% } else { %>
+                        <span class="text-muted">No image</span>
+                      <% } %>
+                    </td>
                     <td><%= service.duration %> min</td>
                     <td>$<%= service.price %></td>
                     <td>
@@ -46,7 +54,8 @@
                         data-description="<%= service.description %>"
                         data-duration="<%= service.duration %>"
                         data-price="<%= service.price %>"
-                        data-active="<%= service.isActive %>">
+                        data-active="<%= service.isActive %>"
+                        data-image="<%= service.imageUrl %>">
                         Edit
                       </button>
                     </td>
@@ -70,28 +79,34 @@
       <div class="card-body">
         <form action="/admin/services" method="POST">
           <div class="mb-3">
-            <label for="name" class="form-label">Service Name *</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <label for="newServiceName" class="form-label">Service Name *</label>
+            <input type="text" class="form-control" id="newServiceName" name="name" required>
           </div>
           
           <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            <label for="newServiceDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="newServiceDescription" name="description" rows="3"></textarea>
           </div>
           
           <div class="mb-3">
-            <label for="duration" class="form-label">Duration (minutes) *</label>
-            <input type="number" class="form-control" id="duration" name="duration" min="15" step="15" required>
+            <label for="newServiceImageUrl" class="form-label">Image URL</label>
+            <input type="url" class="form-control" id="newServiceImageUrl" name="imageUrl">
+            <div class="form-text">Enter a URL for an image that represents this service</div>
           </div>
           
           <div class="mb-3">
-            <label for="price" class="form-label">Price ($) *</label>
-            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+            <label for="newServiceDuration" class="form-label">Duration (minutes)</label>
+            <input type="number" class="form-control" id="newServiceDuration" name="duration" required min="15" step="15">
+          </div>
+          
+          <div class="mb-3">
+            <label for="newServicePrice" class="form-label">Price ($) *</label>
+            <input type="number" class="form-control" id="newServicePrice" name="price" min="0" step="0.01" required>
           </div>
           
           <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
-            <label class="form-check-label" for="isActive">Active</label>
+            <input type="checkbox" class="form-check-input" id="newServiceActive" name="isActive" checked>
+            <label class="form-check-label" for="newServiceActive">Active</label>
           </div>
           
           <div class="d-grid">
@@ -114,28 +129,34 @@
       <form id="editServiceForm" action="/admin/services/" method="POST">
         <div class="modal-body">
           <div class="mb-3">
-            <label for="editName" class="form-label">Service Name *</label>
-            <input type="text" class="form-control" id="editName" name="name" required>
+            <label for="editServiceName" class="form-label">Service Name *</label>
+            <input type="text" class="form-control" id="editServiceName" name="name" required>
           </div>
           
           <div class="mb-3">
-            <label for="editDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="editDescription" name="description" rows="3"></textarea>
+            <label for="editServiceDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="editServiceDescription" name="description" rows="3"></textarea>
           </div>
           
           <div class="mb-3">
-            <label for="editDuration" class="form-label">Duration (minutes) *</label>
-            <input type="number" class="form-control" id="editDuration" name="duration" min="15" step="15" required>
+            <label for="editServiceImageUrl" class="form-label">Image URL</label>
+            <input type="url" class="form-control" id="editServiceImageUrl" name="imageUrl">
+            <div class="form-text">Enter a URL for an image that represents this service</div>
           </div>
           
           <div class="mb-3">
-            <label for="editPrice" class="form-label">Price ($) *</label>
-            <input type="number" class="form-control" id="editPrice" name="price" min="0" step="0.01" required>
+            <label for="editServiceDuration" class="form-label">Duration (minutes)</label>
+            <input type="number" class="form-control" id="editServiceDuration" name="duration" required min="15" step="15">
+          </div>
+          
+          <div class="mb-3">
+            <label for="editServicePrice" class="form-label">Price ($) *</label>
+            <input type="number" class="form-control" id="editServicePrice" name="price" min="0" step="0.01" required>
           </div>
           
           <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="editIsActive" name="isActive">
-            <label class="form-check-label" for="editIsActive">Active</label>
+            <input type="checkbox" class="form-check-input" id="editServiceActive" name="isActive">
+            <label class="form-check-label" for="editServiceActive">Active</label>
           </div>
         </div>
         <div class="modal-footer">
@@ -149,7 +170,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Handle edit service modal
+    // Edit service modal
     const editServiceModal = document.getElementById('editServiceModal');
     if (editServiceModal) {
       editServiceModal.addEventListener('show.bs.modal', function(event) {
@@ -159,16 +180,18 @@
         const description = button.getAttribute('data-description');
         const duration = button.getAttribute('data-duration');
         const price = button.getAttribute('data-price');
-        const isActive = button.getAttribute('data-active') === 'true';
+        const active = button.getAttribute('data-active');
+        const imageUrl = button.getAttribute('data-image');
         
-        const form = document.getElementById('editServiceForm');
+        const form = editServiceModal.querySelector('form');
         form.action = `/admin/services/${id}`;
         
-        document.getElementById('editName').value = name;
-        document.getElementById('editDescription').value = description || '';
-        document.getElementById('editDuration').value = duration;
-        document.getElementById('editPrice').value = price;
-        document.getElementById('editIsActive').checked = isActive;
+        editServiceModal.querySelector('#editServiceName').value = name;
+        editServiceModal.querySelector('#editServiceDescription').value = description || '';
+        editServiceModal.querySelector('#editServiceImageUrl').value = imageUrl || '';
+        editServiceModal.querySelector('#editServiceDuration').value = duration;
+        editServiceModal.querySelector('#editServicePrice').value = price;
+        editServiceModal.querySelector('#editServiceActive').checked = active === 'true';
       });
     }
   });

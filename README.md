@@ -27,8 +27,9 @@ This project is a massage booking website built with Node.js, Express, EJS templ
 ## Features
 
 ### User Features
-- Browse available massage services with detailed descriptions and pricing
+- Browse available massage services with detailed descriptions, pricing, and images
 - Book appointments by selecting service, date, and available time slots
+- Visual service selection with images to enhance the booking experience
 - View and manage personal bookings
 - Contact form for inquiries and feedback
 - Responsive design for mobile and desktop devices
@@ -130,7 +131,8 @@ windsurf/
 ├── routes/              # Route handlers
 │   ├── index.js         # Main routes
 │   ├── booking.js       # Booking routes
-│   └── admin.js         # Admin routes
+│   ├── admin.js         # Admin routes
+│   └── api.js           # API routes for AJAX requests
 ├── views/               # EJS templates
 │   ├── partials/        # Reusable template parts
 │   │   ├── header.ejs   # Page header
@@ -149,6 +151,9 @@ windsurf/
 ├── .env.example         # Example environment variables
 ├── .gitignore           # Git ignore file
 ├── package.json         # Project dependencies
+├── migrations/          # Database migrations
+│   └── add-service-images.js # Migration to add image URLs to services
+├── update-service-images.js # Script to update service images
 └── README.md            # Project documentation
 ```
 

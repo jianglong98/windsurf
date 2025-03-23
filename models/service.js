@@ -23,6 +23,11 @@ module.exports = (sequelize) => {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
