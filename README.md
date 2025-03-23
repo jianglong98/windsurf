@@ -6,7 +6,7 @@ This project is a massage booking website built with Node.js, Express, EJS templ
 
 - **Name**: Quality Massage LLC
 - **Address**: 12229 Voyager Pkwy #160, Colorado Springs, CO 80921
-- **Phone**: (719) 900-8424
+- **Phone**: (719) 930-9548
 - **Email**: yilinzhang1969@gmail.com
 
 ## Features

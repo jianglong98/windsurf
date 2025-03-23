@@ -61,7 +61,7 @@ app.use((req, res, next) => {
   };
   
   // Add business contact information for global use
-  res.locals.businessPhone = "(719) 900-8424";
+  res.locals.businessPhone = "(719) 930-9548";
   res.locals.businessEmail = "yilinzhang1969@gmail.com";
   
   // Add active path for navigation highlighting
