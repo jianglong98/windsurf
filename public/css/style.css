@@ -11,6 +11,10 @@
   --dark-color: #5a5c69;
   --light-color: #f8f9fc;
   --body-color: #858796;
+  --colorado-blue: #4e73df;
+  --colorado-mountains: #5a5c69;
+  --colorado-pine: #1e7e34;
+  --colorado-sunset: #e74a3b;
 }
 
 /* Global Styles */
@@ -185,13 +189,23 @@ footer a:hover {
 }
 
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/lotus_massage_background.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/img/colorado-springs-bg.jpg');
   background-size: cover;
   background-position: center;
-  color: #fff;
-  padding: 100px 0;
-  margin-bottom: 2rem;
-  border-radius: 0.5rem;
+  color: white;
+  padding: 80px 0;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom right, transparent 49%, white 50%);
 }
 
 .hero h1 {

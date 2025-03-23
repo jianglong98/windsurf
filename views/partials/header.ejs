@@ -3,23 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Book your massage appointment at <%= businessName %> - Professional massage services in Colorado Springs. Open 7 days a week with skilled therapists.">
-  <meta name="keywords" content="massage, Colorado Springs, body massage, foot massage, relaxation, therapeutic massage, spa, wellness">
+  <meta name="description" content="Top-rated massage therapy in Colorado Springs, CO. Quality Massage LLC offers foot massage, body massage, and combo massage services at 12229 Voyager Pkwy. Book your appointment today!">
+  <meta name="keywords" content="massage Colorado Springs, foot massage Colorado Springs, body massage Colorado Springs, massage therapy Northgate Village, best massage Colorado Springs, affordable massage Colorado Springs, Asian massage Colorado Springs, relaxation massage, therapeutic massage, spa, wellness, 80921">
   <meta name="author" content="<%= businessName %>">
   <meta name="theme-color" content="#4e73df">
+  <meta name="geo.region" content="US-CO">
+  <meta name="geo.placename" content="Colorado Springs">
+  <meta name="geo.position" content="38.995;-104.823">
+  <meta name="ICBM" content="38.995, -104.823">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="<%= locals.fullUrl || 'https://example.com' %>">
-  <meta property="og:title" content="<%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs">
-  <meta property="og:description" content="Professional massage services in Colorado Springs. Open Mon-Fri 9am-7pm, Sat-Sun 10am-5pm. Book your appointment today!">
+  <meta property="og:title" content="<%= title %> | <%= businessName %> - Best Massage Therapy in Colorado Springs, CO">
+  <meta property="og:description" content="Top-rated massage services in Colorado Springs at 12229 Voyager Pkwy. Foot massage, body massage, and combo massage available. Open 7 days a week. Book now!">
   <meta property="og:image" content="/img/og-image.jpg">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="<%= locals.fullUrl || 'https://example.com' %>">
-  <meta property="twitter:title" content="<%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs">
-  <meta property="twitter:description" content="Professional massage services in Colorado Springs. Open Mon-Fri 9am-7pm, Sat-Sun 10am-5pm. Book your appointment today!">
+  <meta property="twitter:title" content="<%= title %> | <%= businessName %> - Best Massage Therapy in Colorado Springs, CO">
+  <meta property="twitter:description" content="Top-rated massage services in Colorado Springs at 12229 Voyager Pkwy. Foot massage, body massage, and combo massage available. Open 7 days a week. Book now!">
   <meta property="twitter:image" content="/img/og-image.jpg">
   
   <!-- Google Ads optimization -->
@@ -34,6 +38,8 @@
     "image": "/img/logo.png",
     "url": "<%= locals.fullUrl || 'https://example.com' %>",
     "telephone": "<%= businessPhone %>",
+    "priceRange": "$$",
+    "description": "Top-rated massage therapy services in Colorado Springs, CO. We offer foot massage, body massage, and combo massage at affordable prices. Located at Northgate Village on Voyager Pkwy.",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "<%= businessAddress.street %>",
@@ -44,8 +50,8 @@
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": 38.8339,
-      "longitude": -104.8214
+      "latitude": 38.995,
+      "longitude": -104.823
     },
     "openingHoursSpecification": [
       {
@@ -60,12 +66,11 @@
         "opens": "10:00",
         "closes": "17:00"
       }
-    ],
-    "priceRange": "$$"
+    ]
   }
   </script>
   
-  <title><%= title %> | <%= businessName %> - Massage Therapy in Colorado Springs</title>
+  <title><%= title %> | <%= businessName %> - Best Massage Therapy in Colorado Springs, CO</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
