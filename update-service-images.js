@@ -7,25 +7,25 @@
 
 const { sequelize, Service } = require('./models');
 
-// Image URLs for different massage types with Asian massage themes from Getty Images and iStock
+// Image URLs for different massage types with properly sized and formatted images
 const serviceImages = {
   // Exact service names from our database
-  'Foot Massage - 30 minutes': 'https://media.gettyimages.com/id/1398228398/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=qxRQRPRqPXWgzgxEsLOFDNxAOTQyQxZZ1_-YVNGkVYs=',
-  'Foot Massage - 60 minutes': 'https://media.gettyimages.com/id/1398228396/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=Kz-kgXTu-Aq9iKSNBKGPDLxPvKHxJZnUUYvTJQD4Qic=',
-  'Combo Massage - 30 min foot + 30 min body': 'https://media.gettyimages.com/id/1398228401/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=RnLvxGWKBsQPdXc7OwWC5SbGiTAhyPGKzDjpFvbXGEQ=',
-  'Combo Massage - 30 min foot + 60 min body': 'https://media.gettyimages.com/id/1312705508/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=',
-  'Body Massage - 30 minutes': 'https://media.gettyimages.com/id/1312705506/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=dHM9FUDQCYFLtQpGQmUe0_AaVW9Uyl4JKDrvCJSrJQE=',
-  'Body Massage - 60 minutes': 'https://media.gettyimages.com/id/1312705505/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=Hy9U8KAHQEbdXgxRMvx4WZlW3-dXDXCOUE_BgMCLVwE=',
-  'Body Massage - 90 minutes': 'https://media.gettyimages.com/id/1312705507/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=',
+  'Foot Massage - 30 minutes': 'https://images.pexels.com/photos/3865548/pexels-photo-3865548.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Foot Massage - 60 minutes': 'https://images.pexels.com/photos/3865557/pexels-photo-3865557.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Combo Massage - 30 min foot + 30 min body': 'https://images.pexels.com/photos/3865545/pexels-photo-3865545.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Combo Massage - 30 min foot + 60 min body': 'https://images.pexels.com/photos/5240677/pexels-photo-5240677.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Body Massage - 30 minutes': 'https://images.pexels.com/photos/5699516/pexels-photo-5699516.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Body Massage - 60 minutes': 'https://images.pexels.com/photos/5699431/pexels-photo-5699431.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Body Massage - 90 minutes': 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=600',
   
   // Generic keywords for fallback
-  'Foot Massage': 'https://media.gettyimages.com/id/1398228398/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=qxRQRPRqPXWgzgxEsLOFDNxAOTQyQxZZ1_-YVNGkVYs=',
-  'Combo Massage': 'https://media.gettyimages.com/id/1398228401/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=RnLvxGWKBsQPdXc7OwWC5SbGiTAhyPGKzDjpFvbXGEQ=',
-  'Body Massage': 'https://media.gettyimages.com/id/1312705505/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=Hy9U8KAHQEbdXgxRMvx4WZlW3-dXDXCOUE_BgMCLVwE='
+  'Foot Massage': 'https://images.pexels.com/photos/3865548/pexels-photo-3865548.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Combo Massage': 'https://images.pexels.com/photos/3865545/pexels-photo-3865545.jpeg?auto=compress&cs=tinysrgb&w=600',
+  'Body Massage': 'https://images.pexels.com/photos/5699431/pexels-photo-5699431.jpeg?auto=compress&cs=tinysrgb&w=600'
 };
 
 // Default image if no specific image is found
-const defaultImage = 'https://media.gettyimages.com/id/1312705508/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=';
+const defaultImage = 'https://images.pexels.com/photos/5699423/pexels-photo-5699423.jpeg?auto=compress&cs=tinysrgb&w=600';
 
 async function updateServiceImages() {
   try {
@@ -63,7 +63,7 @@ async function updateServiceImages() {
       await service.update({ imageUrl });
     }
     
-    console.log('All services updated with Asian massage images successfully!');
+    console.log('All services updated with properly sized and formatted images successfully!');
     
   } catch (error) {
     console.error('Error updating service images:', error);
