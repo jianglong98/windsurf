@@ -7,25 +7,25 @@
 
 const { sequelize, Service } = require('./models');
 
-// Image URLs for different massage types with Asian massage themes
+// Image URLs for different massage types with Asian massage themes from Getty Images and iStock
 const serviceImages = {
   // Exact service names from our database
-  'Foot Massage - 30 minutes': 'https://img.freepik.com/premium-photo/asian-woman-giving-traditional-thai-foot-massage-spa_35674-3108.jpg',
-  'Foot Massage - 60 minutes': 'https://img.freepik.com/premium-photo/asian-woman-giving-traditional-thai-foot-massage-spa_35674-3109.jpg',
-  'Combo Massage - 30 min foot + 30 min body': 'https://img.freepik.com/premium-photo/asian-woman-getting-combination-foot-body-massage-spa_35674-14247.jpg',
-  'Combo Massage - 30 min foot + 60 min body': 'https://img.freepik.com/premium-photo/asian-woman-getting-combination-foot-body-massage-spa_35674-14248.jpg',
-  'Body Massage - 30 minutes': 'https://img.freepik.com/premium-photo/asian-woman-getting-full-body-massage-spa_35674-14249.jpg',
-  'Body Massage - 60 minutes': 'https://img.freepik.com/premium-photo/asian-woman-getting-full-body-massage-spa_35674-14250.jpg',
-  'Body Massage - 90 minutes': 'https://img.freepik.com/premium-photo/asian-woman-getting-full-body-massage-spa_35674-14251.jpg',
+  'Foot Massage - 30 minutes': 'https://media.gettyimages.com/id/1398228398/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=qxRQRPRqPXWgzgxEsLOFDNxAOTQyQxZZ1_-YVNGkVYs=',
+  'Foot Massage - 60 minutes': 'https://media.gettyimages.com/id/1398228396/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=Kz-kgXTu-Aq9iKSNBKGPDLxPvKHxJZnUUYvTJQD4Qic=',
+  'Combo Massage - 30 min foot + 30 min body': 'https://media.gettyimages.com/id/1398228401/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=RnLvxGWKBsQPdXc7OwWC5SbGiTAhyPGKzDjpFvbXGEQ=',
+  'Combo Massage - 30 min foot + 60 min body': 'https://media.gettyimages.com/id/1312705508/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=',
+  'Body Massage - 30 minutes': 'https://media.gettyimages.com/id/1312705506/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=dHM9FUDQCYFLtQpGQmUe0_AaVW9Uyl4JKDrvCJSrJQE=',
+  'Body Massage - 60 minutes': 'https://media.gettyimages.com/id/1312705505/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=Hy9U8KAHQEbdXgxRMvx4WZlW3-dXDXCOUE_BgMCLVwE=',
+  'Body Massage - 90 minutes': 'https://media.gettyimages.com/id/1312705507/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=',
   
   // Generic keywords for fallback
-  'Foot Massage': 'https://img.freepik.com/premium-photo/asian-woman-giving-traditional-thai-foot-massage-spa_35674-3108.jpg',
-  'Combo Massage': 'https://img.freepik.com/premium-photo/asian-woman-getting-combination-foot-body-massage-spa_35674-14247.jpg',
-  'Body Massage': 'https://img.freepik.com/premium-photo/asian-woman-getting-full-body-massage-spa_35674-14250.jpg'
+  'Foot Massage': 'https://media.gettyimages.com/id/1398228398/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=qxRQRPRqPXWgzgxEsLOFDNxAOTQyQxZZ1_-YVNGkVYs=',
+  'Combo Massage': 'https://media.gettyimages.com/id/1398228401/photo/reflexology-foot-massage-asian-thai-style-foot-massage.jpg?s=612x612&w=0&k=20&c=RnLvxGWKBsQPdXc7OwWC5SbGiTAhyPGKzDjpFvbXGEQ=',
+  'Body Massage': 'https://media.gettyimages.com/id/1312705505/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=Hy9U8KAHQEbdXgxRMvx4WZlW3-dXDXCOUE_BgMCLVwE='
 };
 
 // Default image if no specific image is found
-const defaultImage = 'https://img.freepik.com/premium-photo/asian-massage-therapist-welcoming-client-spa_35674-14252.jpg';
+const defaultImage = 'https://media.gettyimages.com/id/1312705508/photo/asian-woman-relaxing-while-receiving-back-massage-in-spa-salon.jpg?s=612x612&w=0&k=20&c=lHSUbXWKBpLGXYCgZc7yjwVUJO5TJZ3_gYKQDECWt0M=';
 
 async function updateServiceImages() {
   try {
