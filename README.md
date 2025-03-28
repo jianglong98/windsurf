@@ -214,188 +214,36 @@ Setting up the proper DNS configuration is crucial for your domain to work with 
 - **Domain not resolving**: Ensure DNS propagation has completed (can take 24-48 hours)
 - **SSL errors**: Verify certificate is issued and properly associated with API Gateway
 
-### CI/CD Pipeline with GitHub Actions
+#### 4. Detailed CNAME Configuration for Squarespace DNS
 
-This project uses GitHub Actions for continuous integration and deployment. When you push to the main branch, the application is automatically deployed to AWS Lambda.
+If you're using Squarespace as your DNS provider, follow these specific steps:
 
-#### 1. GitHub Repository Setup
+1. **Certificate Validation CNAME Record**:
+   - Log in to Squarespace > Settings > Domains > otalkie.com > Advanced settings > DNS Settings
+   - Add a new CNAME record:
+     - **Host**: `_7715cc3f08e1c25b505c794fb2b1d1ec` (from AWS Certificate Manager)
+     - **Value**: `_75b865420b85c4a3cfa22c23433af6a5.xlfgrmvvlj.acm-validations.aws` (from AWS Certificate Manager)
+     - **TTL**: 3600 (or lowest available)
 
-1. **Push your code to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Prepare for AWS Lambda deployment"
-   git push origin main
-   ```
+2. **API Gateway CNAME Record** (after certificate validation):
+   - Add another CNAME record:
+     - **Host**: `qualitymassage`
+     - **Value**: The distribution domain name from API Gateway
+     - **TTL**: 3600 (or lowest available)
 
-2. **Add GitHub Secrets**:
-   - Go to your GitHub repository > Settings > Secrets and variables > Actions
-   - Add the following secrets:
-     - `AWS_ACCESS_KEY_ID`: Your AWS access key
-     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
-     - `SESSION_SECRET`: Your session secret for the application
-     - `ADMIN_PASSWORD_HASH`: The bcrypt hash of your admin password
-
-#### 2. GitHub Actions Workflow
-
-The workflow file is already configured at `.github/workflows/deploy.yml`. It performs the following steps:
-
-1. **Checkout code** from the repository
-2. **Set up Node.js** environment
-3. **Install dependencies** with npm ci
-4. **Deploy to AWS** using Serverless Framework
-5. **Set environment variables** for the Lambda function
-
-#### 3. Monitoring Deployments
-
-- **View deployment status** in the "Actions" tab of your GitHub repository
-- **Check deployment logs** for any errors or issues
-- **Verify Lambda function** in AWS Console after deployment
-
-#### 4. Manual Deployment
-
-If needed, you can also deploy manually:
-
-```bash
-npm run deploy
-```
-
-### AWS Resources Created
-
-- **Lambda Function**: Runs the Express.js application
-- **API Gateway**: Handles HTTP requests and routes them to Lambda
-- **DynamoDB Tables**: Stores services, bookings, and admin data
-- **IAM Roles**: Provides necessary permissions
-- **CloudWatch Logs**: Captures application logs
-- **Certificate Manager**: Manages SSL certificate
-- **Custom Domain**: Maps your domain to API Gateway
-
-### Monitoring and Troubleshooting
-
-- **CloudWatch Logs**: Check Lambda function logs
-- **API Gateway Dashboard**: Monitor API requests
-- **DynamoDB Dashboard**: View database metrics
-
-### Local Development with DynamoDB Local
-
-For local development with DynamoDB:
-
-1. Install DynamoDB Local:
-   ```bash
-   npm install -g dynamodb-local
-   ```
-
-2. Start DynamoDB Local:
-   ```bash
-   dynamodb-local -port 8000
-   ```
-
-3. Set environment variable:
-   ```
-   DYNAMODB_LOCAL=true
-   ```
-
-## Default Accounts
-
-After seeding the database, you can use these accounts:
-
-- **Admin Account**:
-  - Email: yilinzhang1969@gmail.com
-  - Password: admin123
-
-## Admin Login
-
-The admin login functionality provides secure access to the admin dashboard. To access the admin area:
-
-1. Navigate to `/admin/login` or click on the "Admin Login" link in the footer
-2. Enter the admin credentials (email: yilinzhang1969@gmail.com, password: admin123)
-3. You will be redirected to the admin dashboard where you can manage bookings, services, and business hours
-
-## Project Structure
-
-```
-windsurf/
-├── app.js               # Main application entry point
-├── models/              # Database models (Sequelize)
-│   ├── index.js         # Database connection and model associations
-│   ├── user.js          # User model
-│   ├── service.js       # Service model
-│   ├── booking.js       # Booking model
-│   └── businessHours.js # Business hours model
-├── public/              # Static assets
-│   ├── css/             # Stylesheets
-│   ├── js/              # Client-side JavaScript
-│   └── img/             # Images
-├── routes/              # Route handlers
-│   ├── index.js         # Main routes
-│   ├── booking.js       # Booking routes
-│   ├── admin.js         # Admin routes
-│   └── api.js           # API routes for AJAX requests
-├── views/               # EJS templates
-│   ├── partials/        # Reusable template parts
-│   │   ├── header.ejs   # Page header
-│   │   └── footer.ejs   # Page footer
-│   ├── admin/           # Admin area templates
-│   │   ├── dashboard.ejs # Admin dashboard
-│   │   ├── bookings.ejs  # Bookings management
-│   │   └── services.ejs  # Services management
-│   ├── index.ejs        # Homepage
-│   ├── booking.ejs      # Booking form
-│   ├── contact.ejs      # Contact page
-│   └── about.ejs        # About page
-├── seed.js              # Database seeder
-├── test-admin-login.js  # Admin login test script
-├── fix-admin.js         # Admin account fix script
-├── .env.example         # Example environment variables
-├── .gitignore           # Git ignore file
-├── package.json         # Project dependencies
-├── migrations/          # Database migrations
-│   └── add-service-images.js # Migration to add image URLs to services
-├── update-service-images.js # Script to update service images
-└── README.md            # Project documentation
-```
-
-## API Endpoints
-
-### Public Endpoints
-- `GET /` - Homepage
-- `GET /services` - View all active services
-- `GET /booking` - Booking form
-- `POST /booking` - Create a new booking
-- `GET /about` - About page
-- `GET /contact` - Contact page
-- `POST /contact` - Submit contact form
-
-### Admin Endpoints
-- `GET /admin/login` - Admin login page
-- `POST /admin/login` - Admin login process
-- `GET /admin/dashboard` - Admin dashboard
-- `GET /admin/bookings` - Manage bookings
-- `GET /admin/services` - Manage services
-- `GET /admin/business-hours` - Manage business hours
-- `POST /admin/logout` - Admin logout
-
-## Development
-
-### Running Tests
-```bash
-npm test
-```
-
-### Testing Admin Login
-```bash
-node test-admin-login.js
-```
-
-### Fixing Admin Account
-If you encounter issues with the admin login, you can reset the admin account:
-```bash
-node fix-admin.js
-```
+> **⚠️ IMPORTANT NOTE:** As of March 27, 2025, the Host CNAME record for `qualitymassage` has not been added to the DNS configuration. This is because we are waiting for the SSL certificate to change from "PENDING_VALIDATION" to "ISSUED" status in AWS Certificate Manager. The certificate validation CNAME record has been added, but validation may take up to 24-48 hours to complete. Once the certificate is validated, we will run the setup-domain.js script to get the distribution domain name and then add the final CNAME record.
 
 ## Maintenance
 
 ### Updating Business Information
 Business information (name, address, phone, email) is stored as global variables in `app.js` for easy maintenance.
+
+### DNS and Domain Management
+When making changes to the DNS configuration or domain settings:
+1. Always check certificate validation status before running domain setup scripts
+2. Keep track of certificate ARNs and expiration dates
+3. Monitor DNS propagation after making changes
+4. Test the website with HTTPS to ensure SSL is working properly
 
 ## License
 This project is licensed under the MIT License.
