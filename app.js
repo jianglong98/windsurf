@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { sequelize } = require('./models');
 const dotenv = require('dotenv');
+const serverless = require('serverless-http');
 
 // Load environment variables
 dotenv.config();
@@ -110,20 +111,24 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 
-// Sync database and start server
-const startServer = async () => {
-  try {
-    await sequelize.sync();
-    console.log('Database synced successfully');
-    
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-  }
-};
+// Sync database and start server - Only run in non-Lambda environment
+if (process.env.NODE_ENV !== 'lambda') {
+  const startServer = async () => {
+    try {
+      await sequelize.sync();
+      console.log('Database synced successfully');
+      
+      app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
+    } catch (error) {
+      console.error('Failed to start server:', error);
+    }
+  };
 
-startServer();
+  startServer();
+}
 
+// Export for both Lambda and testing
 module.exports = app; // For testing purposes
+module.exports.handler = serverless(app); // For AWS Lambda

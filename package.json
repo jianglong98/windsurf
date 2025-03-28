@@ -8,7 +8,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "seed": "node seeders/seed.js"
+    "seed": "node seeders/seed.js",
+    "deploy": "serverless deploy --stage prod",
+    "deploy:dev": "serverless deploy --stage dev",
+    "offline": "serverless offline start",
+    "create-tables": "node scripts/create-dynamodb-tables.js",
+    "migrate-db": "node scripts/migrate-to-dynamodb.js",
+    "setup-domain": "node scripts/setup-domain.js"
   },
   "repository": {
     "type": "git",
@@ -23,21 +29,27 @@
   "homepage": "https://github.com/jianglong98/windsurf#readme",
   "description": "This project is a massage booking website built with Node.js, Express, EJS templating, and an SQLite database using Sequelize ORM.",
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
+    "dynamodb-geo": "^0.4.0",
+    "dynamoose": "^4.0.3",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "nodemailer": "^6.10.0",
     "sequelize": "^6.37.6",
+    "serverless-http": "^3.2.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "puppeteer": "^24.4.0",
+    "serverless-domain-manager": "^8.0.0",
+    "serverless-offline": "^14.4.0",
     "supertest": "^7.0.0"
   }
 }

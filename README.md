@@ -97,6 +97,203 @@ This project is a massage booking website built with Node.js, Express, EJS templ
 
 6. Access the application at `http://localhost:3000`
 
+## AWS Lambda Deployment
+
+This application can be deployed to AWS Lambda with API Gateway for a serverless architecture. This approach is ideal for low-to-medium traffic websites with a pay-as-you-go pricing model.
+
+### Prerequisites
+
+- AWS Account
+- AWS CLI installed and configured
+- Serverless Framework installed globally (`npm install -g serverless`)
+- Domain name (qualitymassage.otalkie.com)
+
+### Deployment Steps
+
+1. **Install required packages**:
+   ```bash
+   npm install serverless-http aws-sdk dynamoose --save
+   npm install serverless-offline serverless-domain-manager --save-dev
+   ```
+
+2. **Configure AWS credentials**:
+   ```bash
+   aws configure
+   ```
+   Enter your AWS Access Key ID, Secret Access Key, region (us-east-1), and output format (json).
+
+3. **Test locally with Serverless Offline**:
+   ```bash
+   npm run offline
+   ```
+
+4. **Create DynamoDB tables**:
+   ```bash
+   npm run create-tables
+   ```
+
+5. **Migrate data from SQLite to DynamoDB**:
+   ```bash
+   npm run migrate-db
+   ```
+
+6. **Deploy to AWS Lambda**:
+   ```bash
+   npm run deploy
+   ```
+
+7. **Set up custom domain**:
+   - Request an SSL certificate in AWS Certificate Manager for qualitymassage.otalkie.com
+   - Run the domain setup script:
+     ```bash
+     npm run setup-domain
+     ```
+   - Create a CNAME record in your DNS provider pointing qualitymassage.otalkie.com to the API Gateway domain
+
+### DNS Configuration
+
+Setting up the proper DNS configuration is crucial for your domain to work with AWS services. Follow these steps carefully:
+
+#### 1. SSL Certificate Setup
+
+1. **Request a certificate in AWS Certificate Manager**:
+   ```bash
+   aws acm request-certificate --domain-name qualitymassage.otalkie.com --validation-method DNS
+   ```
+   Or use the AWS Console: Certificate Manager > Request certificate > Public certificate
+
+2. **Get certificate validation details**:
+   ```bash
+   aws acm describe-certificate --certificate-arn YOUR_CERTIFICATE_ARN
+   ```
+   Look for the `ResourceRecord` section which contains the Name and Value for DNS validation.
+
+3. **Add certificate validation CNAME record in your DNS provider**:
+   - **Host/Name**: Use only the part before your domain (e.g., `_7715cc3f08e1c25b505c794fb2b1d1ec`)
+   - **Value**: The validation value (e.g., `_75b865420b85c4a3cfa22c23433af6a5.xlfgrmvvlj.acm-validations.aws`)
+   - **TTL**: 3600 seconds (or lowest available)
+
+4. **Wait for certificate validation**:
+   - Check validation status with:
+     ```bash
+     aws acm describe-certificate --certificate-arn YOUR_CERTIFICATE_ARN
+     ```
+   - Look for "Status": "ISSUED" (can take 30 minutes to 24 hours)
+
+#### 2. API Gateway Custom Domain Setup
+
+1. **Run the domain setup script after certificate validation**:
+   ```bash
+   node scripts/setup-domain.js
+   ```
+   This creates a custom domain in API Gateway and maps it to your API.
+
+2. **Get the distribution domain name**:
+   - From script output, or
+   - Using AWS CLI:
+     ```bash
+     aws apigateway get-domain-name --domain-name qualitymassage.otalkie.com
+     ```
+   - Look for the `distributionDomainName` value
+
+3. **Add API Gateway CNAME record in your DNS provider**:
+   - **Host/Name**: `qualitymassage`
+   - **Value**: The distribution domain name (e.g., `d-abc123xyz.execute-api.us-east-1.amazonaws.com`)
+   - **TTL**: 3600 seconds (or lowest available)
+
+4. **Verify DNS propagation**:
+   - Use online tools like [whatsmydns.net](https://www.whatsmydns.net/)
+   - Check from command line:
+     ```bash
+     dig CNAME qualitymassage.otalkie.com
+     ```
+
+#### 3. DNS Troubleshooting
+
+- **Certificate not validating**: Double-check CNAME record values for typos
+- **Domain not resolving**: Ensure DNS propagation has completed (can take 24-48 hours)
+- **SSL errors**: Verify certificate is issued and properly associated with API Gateway
+
+### CI/CD Pipeline with GitHub Actions
+
+This project uses GitHub Actions for continuous integration and deployment. When you push to the main branch, the application is automatically deployed to AWS Lambda.
+
+#### 1. GitHub Repository Setup
+
+1. **Push your code to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Prepare for AWS Lambda deployment"
+   git push origin main
+   ```
+
+2. **Add GitHub Secrets**:
+   - Go to your GitHub repository > Settings > Secrets and variables > Actions
+   - Add the following secrets:
+     - `AWS_ACCESS_KEY_ID`: Your AWS access key
+     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+     - `SESSION_SECRET`: Your session secret for the application
+     - `ADMIN_PASSWORD_HASH`: The bcrypt hash of your admin password
+
+#### 2. GitHub Actions Workflow
+
+The workflow file is already configured at `.github/workflows/deploy.yml`. It performs the following steps:
+
+1. **Checkout code** from the repository
+2. **Set up Node.js** environment
+3. **Install dependencies** with npm ci
+4. **Deploy to AWS** using Serverless Framework
+5. **Set environment variables** for the Lambda function
+
+#### 3. Monitoring Deployments
+
+- **View deployment status** in the "Actions" tab of your GitHub repository
+- **Check deployment logs** for any errors or issues
+- **Verify Lambda function** in AWS Console after deployment
+
+#### 4. Manual Deployment
+
+If needed, you can also deploy manually:
+
+```bash
+npm run deploy
+```
+
+### AWS Resources Created
+
+- **Lambda Function**: Runs the Express.js application
+- **API Gateway**: Handles HTTP requests and routes them to Lambda
+- **DynamoDB Tables**: Stores services, bookings, and admin data
+- **IAM Roles**: Provides necessary permissions
+- **CloudWatch Logs**: Captures application logs
+- **Certificate Manager**: Manages SSL certificate
+- **Custom Domain**: Maps your domain to API Gateway
+
+### Monitoring and Troubleshooting
+
+- **CloudWatch Logs**: Check Lambda function logs
+- **API Gateway Dashboard**: Monitor API requests
+- **DynamoDB Dashboard**: View database metrics
+
+### Local Development with DynamoDB Local
+
+For local development with DynamoDB:
+
+1. Install DynamoDB Local:
+   ```bash
+   npm install -g dynamodb-local
+   ```
+
+2. Start DynamoDB Local:
+   ```bash
+   dynamodb-local -port 8000
+   ```
+
+3. Set environment variable:
+   ```
+   DYNAMODB_LOCAL=true
+   ```
+
 ## Default Accounts
 
 After seeding the database, you can use these accounts:

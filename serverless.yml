@@ -1,0 +1,38 @@
+service: quality-massage-booking
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    NODE_ENV: ${opt:stage, 'lambda'}
+    SESSION_SECRET: ${env:SESSION_SECRET, 'massage-booking-secret'}
+    ADMIN_PASSWORD_HASH: ${env:ADMIN_PASSWORD_HASH, ''}
+    # Add other environment variables as needed
+
+functions:
+  app:
+    handler: app.handler
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
+    environment:
+      NODE_ENV: lambda
+    timeout: 30 # seconds
+    memorySize: 1024 # MB
+
+plugins:
+  - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: qualitymassage.otalkie.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
