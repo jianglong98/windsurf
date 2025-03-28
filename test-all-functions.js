@@ -33,11 +33,14 @@ async function testAllFunctions() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const bookingDate = tomorrow.toISOString().split('T')[0]; // Format as YYYY-MM-DD
     
+    // Generate unique timestamp for email addresses
+    const timestamp = Date.now();
+    
     // Test 1: Create user with email only
     console.log('\n--- Test 1: User with email only ---');
     const emailOnlyUser = await User.create({
       name: 'Email Only Customer',
-      email: 'email.only@example.com',
+      email: `email.only.${timestamp}@example.com`,
       phone: null,
       isAdmin: false
     });
@@ -64,7 +67,7 @@ async function testAllFunctions() {
     const phoneOnlyUser = await User.create({
       name: 'Phone Only Customer',
       email: null,
-      phone: '555-123-4567',
+      phone: `555-123-${timestamp.toString().substring(7)}`,
       isAdmin: false
     });
     console.log('Phone-only user created:', {
@@ -89,8 +92,8 @@ async function testAllFunctions() {
     console.log('\n--- Test 3: User with both email and phone ---');
     const bothContactUser = await User.create({
       name: 'Both Contacts Customer',
-      email: 'both.contacts@example.com',
-      phone: '555-987-6543',
+      email: `both.contacts.${timestamp}@example.com`,
+      phone: `555-987-${timestamp.toString().substring(7)}`,
       isAdmin: false
     });
     console.log('User with both contacts created:', {
