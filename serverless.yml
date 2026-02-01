@@ -27,12 +27,13 @@ functions:
     memorySize: 1024 # MB
 
 plugins:
-  - serverless-offline
-  - serverless-domain-manager
+  # - serverless-domain-manager
 
-custom:
-  customDomain:
-    domainName: qualitymassage.otalkie.com
-    basePath: ''
-    stage: ${self:provider.stage}
-    createRoute53Record: true
+# Temporarily commenting out custom domain configuration
+# custom:
+#   customDomain:
+#     domainName: qualitymassage.otalkie.com
+#     basePath: ''
+#     stage: ${self:provider.stage}
+#     createRoute53Record: false
+#     certificateArn: arn:aws:acm:us-east-1:339712753958:certificate/90caa564-dc89-42cd-b337-4f526cef85d8
